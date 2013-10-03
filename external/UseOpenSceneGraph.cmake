@@ -35,7 +35,7 @@ if(WIN32)
 else()
 	ExternalProject_Add(
 		osg
-		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/osg.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
 		CMAKE_ARGS 
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
