@@ -53,7 +53,7 @@ set_target_properties(osg PROPERTIES FOLDER "3rdparty")
 if(OMEGA_USE_EXTERNAL_OSG)
     set(OSG_INCLUDES ${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
 else()
-	set(OSG_INCLUDES ${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg/include ${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg-build/include)
+	set(OSG_INCLUDES ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg/include ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build/include)
 endif()
 
 # reduced component set.

@@ -24,7 +24,7 @@ ExternalProject_Add(
 	)
 set_target_properties(bullet PROPERTIES FOLDER "3rdparty")
 
-set(BULLET_BASE_DIR ${CMAKE_BINARY_DIR}/src/bullet-prefix/src)
+set(BULLET_BASE_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src)
 
 # This is wrong: The include dir for a build / source install is the
 # one in the next line. 
