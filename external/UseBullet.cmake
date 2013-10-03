@@ -12,7 +12,7 @@ else()
 endif()
 ExternalProject_Add(
 	bullet
-	URL ${CMAKE_SOURCE_DIR}/external/bullet-2.81-rev2613.tar.gz
+	URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-2.81-rev2613.tar.gz
 	CMAKE_GENERATOR ${BULLET_GENERATOR}
 	CMAKE_ARGS 
 		-DCMAKE_CXX_FLAGS:STRING=${BULLET_CXX_FLAGS}
@@ -29,7 +29,7 @@ set(BULLET_BASE_DIR ${CMAKE_BINARY_DIR}/src/bullet-prefix/src)
 # This is wrong: The include dir for a build / source install is the
 # one in the next line. 
 set(BULLET_INCLUDES ${BULLET_BASE_DIR}/bullet/include)
-include_directories(${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet/src)
+include_directories(${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet/src)
 
 set(BULLET_LIB_DIR ${BULLET_BASE_DIR}/bullet-build/lib)
 set(BULLET_COMPONENTS BulletDynamics BulletSoftBody BulletCollision LinearMath)

@@ -10,12 +10,12 @@ set( srcs
 		
 SET( headers 
 		# omega
-		${CMAKE_SOURCE_DIR}/include/omegaOsg/oosgbase.h
-		${CMAKE_SOURCE_DIR}/include/omegaOsg/OsgModule.h
-		${CMAKE_SOURCE_DIR}/include/omegaOsg/OsgRenderPass.h
-		${CMAKE_SOURCE_DIR}/include/omegaOsg/OsgSceneObject.h
-		${CMAKE_SOURCE_DIR}/include/omegaOsg/SceneView.h
-		${CMAKE_SOURCE_DIR}/include/omegaOsg/ReaderFreeImage.h
+		../omegaOsg/oosgbase.h
+		../omegaOsg/OsgModule.h
+		../omegaOsg/OsgRenderPass.h
+		../omegaOsg/OsgSceneObject.h
+		../omegaOsg/SceneView.h
+		../omegaOsg/ReaderFreeImage.h
         ) 
 # add the freetype plugin directly to omegaOsg. The freetype plugin is not compiled with
 # openscenegraph since it can't easily find the freetype library dependency. Finding freetype
@@ -33,7 +33,7 @@ set(freetypeSrcs
 # optional modules        
 set(OMEGAOSG_USE_FBX true CACHE BOOL "Enables Fbx support for omegaOsg.")
 if(OMEGAOSG_USE_FBX)
-	include(${CMAKE_SOURCE_DIR}/external/UseFbx.cmake)
+	include(../external/UseFbx.cmake)
 	SET( srcs ${srcs}
 			fbx/fbxRAnimation.cpp
 			fbx/fbxRCamera.cpp

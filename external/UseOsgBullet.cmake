@@ -18,7 +18,7 @@ endif()
 if(WIN32)
 	ExternalProject_Add(
 		osgBullet
-		URL ${CMAKE_SOURCE_DIR}/external/osgbullet.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgbullet.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
 		CMAKE_ARGS 
 			-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
@@ -29,8 +29,8 @@ if(WIN32)
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
 
 			-DOSGInstallType:STRING=${OsgInstallType}
-			-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg
-			-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg-build
+			-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
+			-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
 			
 			-DBUILD_SHARED_LIBS:BOOLEAN=false
 			-DOSGBULLET_BUILD_APPLICATIONS=OFF
@@ -38,10 +38,10 @@ if(WIN32)
 			-DOSGBULLET_INSTALL_DATA=OFF
 			#Bullet
 			-DBulletInstallType:STRING=${BulletInstallType}
-			-DBulletSourceRoot:PATH=${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet
+			-DBulletSourceRoot:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet
 			-DBulletBuildRoot:PATH=${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet-build
 			#osgWorks
-			-DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/src/osgWorks-prefix/src/osgWorks-build/lib
+			-DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/lib
 			#osg
 			-DOSG_INCLUDE_DIR:PATH=${OSG_INCLUDES}
 			-DOSG_LIBRARY:PATH=${osg_LIBRARY}
@@ -83,7 +83,7 @@ if(WIN32)
 elseif(APPLE)
 	ExternalProject_Add(
 		osgBullet
-		URL ${CMAKE_SOURCE_DIR}/external/osgbullet.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgbullet.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
 		CMAKE_ARGS 
 			#-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
@@ -94,8 +94,8 @@ elseif(APPLE)
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
 
 			-DOSGInstallType:STRING=${OsgInstallType}
-			-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg
-			-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg-build
+			-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
+			-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
 			
 			# Bild a shared lib on linux, or linking with apps will fail (why? Because little
 			# gnomes live in your computer to make your life miserable)
@@ -105,10 +105,10 @@ elseif(APPLE)
 			-DOSGBULLET_INSTALL_DATA=OFF
 			#Bullet
 			-DBulletInstallType:STRING=${BulletInstallType}
-			-DBulletSourceRoot:PATH=${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet
-			-DBulletBuildRoot:PATH=${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet-build
+			-DBulletSourceRoot:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet
+			-DBulletBuildRoot:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-build
 			#osgWorks
-			-DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/src/osgWorks-prefix/src/osgWorks-build/lib
+			-DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/lib
 			#osg
 			-DOSG_INCLUDE_DIR:PATH=${OSG_INCLUDES}
 			-DOSG_LIBRARY:PATH=${osg_LIBRARY}
@@ -155,7 +155,7 @@ elseif(APPLE)
 else()
 	ExternalProject_Add(
 		osgBullet
-		URL ${CMAKE_SOURCE_DIR}/external/osgbullet.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgbullet.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
 		CMAKE_ARGS 
 			#-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
@@ -166,8 +166,8 @@ else()
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
 
 			-DOSGInstallType:STRING=${OsgInstallType}
-			-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg
-			-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/src/osg-prefix/src/osg-build
+			-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
+			-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
 			
 			# Bild a shared lib on linux, or linking with apps will fail (why? Because little
 			# gnomes live in your computer to make your life miserable)
@@ -177,13 +177,13 @@ else()
 			-DOSGBULLET_INSTALL_DATA=OFF
 			#Bullet
 			-DBulletInstallType:STRING=${BulletInstallType}
-			-DBulletSourceRoot:PATH=${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet
-			-DBulletBuildRoot:PATH=${CMAKE_BINARY_DIR}/src/bullet-prefix/src/bullet-build
+			-DBulletSourceRoot:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet
+			-DBulletBuildRoot:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-build
 #----------
 # NOTE: on linux, the osgWorks config files go in the lib or lib64 directory depending on the bitness.
 # This means we will need to take this into accout when building for 32 bit linux. 
 			#osgWorks
-			-DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/src/osgWorks-prefix/src/osgWorks-build/lib64
+			-DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/lib64
 #----------
 			#osg
 			-DOSG_INCLUDE_DIR:PATH=${OSG_INCLUDES}
@@ -234,7 +234,7 @@ endif()
 set_target_properties(osgBullet PROPERTIES FOLDER "3rdparty")
 add_dependencies(osgBullet bullet osgWorks osg)
 
-set(OSGBULLET_BASE_DIR ${CMAKE_BINARY_DIR}/src/osgBullet-prefix/src)
+set(OSGBULLET_BASE_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osgBullet-prefix/src)
 set(OSGBULLET_INCLUDES ${OSGBULLET_BASE_DIR}/osgBullet/include)
 
 set(OSGBULLET_LIB_DIR ${OSGBULLET_BASE_DIR}/osgBullet-build/lib)

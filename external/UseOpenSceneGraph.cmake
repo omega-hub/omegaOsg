@@ -1,34 +1,3 @@
-###############################################################################
-# THE OMEGA LIB PROJECT
-#-----------------------------------------------------------------------------
-# Copyright 2010-2013		Electronic Visualization Laboratory, 
-#							University of Illinois at Chicago
-# Authors:										
-#  Alessandro Febretti		febret@gmail.com
-#-----------------------------------------------------------------------------
-# Copyright (c) 2010-2013, Electronic Visualization Laboratory,  
-# University of Illinois at Chicago
-# All rights reserved.
-# Redistribution and use in source and binary forms, with or without modification, 
-# are permitted provided that the following conditions are met:
-# 
-# Redistributions of source code must retain the above copyright notice, this 
-# list of conditions and the following disclaimer. Redistributions in binary 
-# form must reproduce the above copyright notice, this list of conditions and 
-# the following disclaimer in the documentation and/or other materials provided 
-# with the distribution. 
-# 
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO THE 
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE  GOODS OR 
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
-# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
-# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-###############################################################################
 include(ExternalProject)
 
 set(OMEGA_USE_EXTERNAL_OSG false CACHE BOOL "Enable to use an external osg build instead of the built-in one.")
@@ -52,7 +21,7 @@ endif()
 if(WIN32)
 	ExternalProject_Add(
 		osg
-		URL ${CMAKE_SOURCE_DIR}/external/osg.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
 		CMAKE_ARGS 
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
@@ -66,7 +35,7 @@ if(WIN32)
 else()
 	ExternalProject_Add(
 		osg
-		URL ${CMAKE_SOURCE_DIR}/external/osg.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/osg.tar.gz
 		CMAKE_ARGS 
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg

@@ -8,7 +8,7 @@ if(OMEGA_BUILD_OSG_LIB)
 	add_subdirectory(apps/osgviewer)
 	if(OMEGA_USE_OSGBULLET)
     	#add osgBullet into include
-    	include(${CMAKE_SOURCE_DIR}/external/UseOsgBullet.cmake)
+    	include(external/UseOsgBullet.cmake)
 		include_directories(${OSGBULLET_INCLUDES})
 
 		add_subdirectory(apps/osgbCollision)
