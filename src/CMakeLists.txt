@@ -81,9 +81,9 @@ if(OMEGAOSG_USE_INVENTOR)
 endif()
 
 source_group(omegaOsg REGULAR_EXPRESSION omegaOsg/)		
-source_group(fbx REGULAR_EXPRESSION omegaOsg/fbx/)		
-source_group(Inventor REGULAR_EXPRESSION omegaOsg/Inventor/)		
-source_group(Freetype REGULAR_EXPRESSION omegaOsg/freetype/)		
+source_group(fbx REGULAR_EXPRESSION fbx/)		
+source_group(Inventor REGULAR_EXPRESSION Inventor/)		
+source_group(Freetype REGULAR_EXPRESSION freetype/)		
 
 IF(WIN32)
     SET(TARGET_EXTERNAL_LIBRARIES wininet)
