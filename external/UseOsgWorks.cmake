@@ -4,7 +4,7 @@ if(WIN32)
 	# option we use in linux  does not seem to work
 	ExternalProject_Add(
 		osgWorks
-		URL ${CMAKE_SOURCE_DIR}/external/osgw2.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgw2.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
 		CMAKE_ARGS 
 			-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
@@ -62,7 +62,7 @@ else()
 	# Mac and linux
 	ExternalProject_Add(
 		osgWorks
-		URL ${CMAKE_SOURCE_DIR}/external/osgw2.tar.gz
+		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgw2.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
 		CMAKE_ARGS 
 			-DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
