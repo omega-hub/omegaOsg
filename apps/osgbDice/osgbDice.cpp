@@ -27,7 +27,7 @@
 #define OMEGA_NO_GL_HEADERS
 #include <omega.h>
 #include <omegaToolkit.h>
-#include <omegaOsg.h>
+#include <omegaOsg/omegaOsg.h>
 
 #include <osgViewer/Viewer>
 #include <osgDB/ReadFile>

@@ -56,7 +56,7 @@ else()
 	set(OSG_INCLUDES ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg/include ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build/include)
 endif()
 # NOTE: OSG_INCLUDES is set as a variable in the parent scope, so it can be accessed by other modules like cyclops.
-set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)
+#set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)
 
 # reduced component set.
 #set(OSG_COMPONENTS osg osgAnimation osgDB osgFX osgManipulator osgShadow osgUtil OpenThreads)
@@ -119,7 +119,7 @@ endif()
 include(${CMAKE_CURRENT_LIST_DIR}/UseOsgWorks.cmake)
 # Add osgWorks to openscenegraph includes and libraries (this simplified inclusion in other projects.
 # we consider osg and osgWorks as a single package.
-set(OSG_INCLUDES ${OSG_INCLUDES} ${OSGWORKS_INCLUDES})
+set(OSG_INCLUDES ${OSG_INCLUDES} ${OSGWORKS_INCLUDES} CACHE INTERNAL "")
 set(OSG_LIBS ${OSG_LIBS} ${OSGWORKS_LIBS})
 
 # on windows, copy a subset of the OpenSceneGraph package, to trim some of the fat.
