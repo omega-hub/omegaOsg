@@ -146,5 +146,5 @@ endif(OMEGA_OS_WIN)
 
 add_definitions(-DOSGWORKS_STATIC)
 
-set(OSGWORKS_INCLUDES ${CMAKE_BINARY_DIR}/src/osgWorks-prefix/src/osgWorks/include)
+set(OSGWORKS_INCLUDES ${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks/include)
 
