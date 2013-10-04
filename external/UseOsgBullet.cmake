@@ -20,6 +20,7 @@ if(WIN32)
 		osgBullet
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgbullet.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
+		DEPENDS bullet osgWorks osg
 		CMAKE_ARGS 
 			-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
 			-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
@@ -85,6 +86,7 @@ elseif(APPLE)
 		osgBullet
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgbullet.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
+		DEPENDS bullet osgWorks osg
 		CMAKE_ARGS 
 			#-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
 			#-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
@@ -157,6 +159,7 @@ else()
 		osgBullet
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgbullet.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
+		DEPENDS bullet osgWorks osg
 		CMAKE_ARGS 
 			#-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
 			#-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
@@ -232,7 +235,6 @@ else()
 endif()
 
 set_target_properties(osgBullet PROPERTIES FOLDER "3rdparty")
-add_dependencies(osgBullet bullet osgWorks osg)
 
 set(OSGBULLET_BASE_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osgBullet-prefix/src)
 set(OSGBULLET_INCLUDES ${OSGBULLET_BASE_DIR}/osgBullet/include)
