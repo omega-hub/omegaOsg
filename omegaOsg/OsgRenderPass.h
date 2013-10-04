@@ -29,8 +29,8 @@
 
 #include "omega/RenderPass.h"
 
-#include "omegaOsg/oosgbase.h"
-#include "omegaOsg/OsgModule.h"
+#include "oosgbase.h"
+#include "OsgModule.h"
 
 
 class SceneView;

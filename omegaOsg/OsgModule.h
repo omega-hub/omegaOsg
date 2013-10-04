@@ -35,7 +35,7 @@
 #ifndef __OSG_MODULE_H__
 #define __OSG_MODULE_H__
 
-#include "omegaOsg/oosgbase.h"
+#include "oosgbase.h"
 #include "omega/Engine.h"
 #include "omega/Application.h"
 

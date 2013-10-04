@@ -13,7 +13,7 @@ if(OMEGA_USE_EXTERNAL_OSG)
     set(EXTLIB_DIR ${OMEGA_EXTERNAL_OSG_BINARY_PATH})
     set(OSG_BINARY_DIR ${OMEGA_EXTERNAL_OSG_BINARY_PATH})
 else()
-    set(OSG_BASE_DIR ${CMAKE_BINARY_DIR}/src/osg-prefix/src)
+    set(OSG_BASE_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src)
     set(OSG_BINARY_DIR ${OSG_BASE_DIR}/osg-build)
     set(OSG_SOURCE_DIR ${OSG_BASE_DIR}/osg)
 endif()
@@ -49,11 +49,14 @@ else()
 endif()
 set_target_properties(osg PROPERTIES FOLDER "3rdparty")
 
-
 if(OMEGA_USE_EXTERNAL_OSG)
-    set(OSG_INCLUDES ${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
+    set(OSG_INCLUDES 
+		${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include 
+		${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
 else()
-	set(OSG_INCLUDES ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg/include ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build/include)
+	set(OSG_INCLUDES 
+		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg/include 
+		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build/include)
 endif()
 # NOTE: OSG_INCLUDES is set as a variable in the parent scope, so it can be accessed by other modules like cyclops.
 #set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)

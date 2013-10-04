@@ -38,7 +38,7 @@
 #ifndef __OSG_SCENE_OBJECT_H__
 #define __OSG_SCENE_OBJECT_H__
 
-#include "omegaOsg/oosgbase.h"
+#include "oosgbase.h"
 #include "omega/NodeComponent.h"
 #include "omega/SceneNode.h"
 
