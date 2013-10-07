@@ -359,7 +359,7 @@ void OsgbBasicDemo::initialize()
         myInteractor->setSceneNode(mySceneNode);
     }
 
-	printf("Scene Node: (%lf, %lf, %lf)\n", mySceneNode->getPosition().x(), mySceneNode->getPosition().y(), mySceneNode->getPosition().z());
+	//printf("Scene Node: (%lf, %lf, %lf)\n", mySceneNode->getPosition().x(), mySceneNode->getPosition().y(), mySceneNode->getPosition().z());
 
 	/*/
 	printf("bullet:\n");
@@ -410,14 +410,14 @@ void OsgbBasicDemo::update(const UpdateContext& context)
 	double elapsed = 1./30.;
 	myWorld->stepSimulation( elapsed, 4, elapsed/2. );
 
-	omicron::Vector3f dv (getEngine()->getDefaultCamera()->getDerivedPosition());
-	printf("camera position: %f, %f, %f derived\n", dv.x(), dv.y(), dv.z() );
-	omicron::Vector3f v (getEngine()->getDefaultCamera()->getPosition());
-	printf("camera position: %f, %f, %f\n", v.x(), v.y(), v.z() );
-	omicron::Quaternion de (getEngine()->getDefaultCamera()->getDerivedOrientation());
-	printf("camera orientation: %f, %f, %f, %f derived\n", de.w(), de.x(), de.y(), de.z());
-	omicron::Quaternion e (getEngine()->getDefaultCamera()->getOrientation());
-	printf("camera orientation: %f, %f, %f, %f\n", e.w(), e.x(), e.y(), e.z());
+	//omicron::Vector3f dv (getEngine()->getDefaultCamera()->getDerivedPosition());
+	//printf("camera position: %f, %f, %f derived\n", dv.x(), dv.y(), dv.z() );
+	//omicron::Vector3f v (getEngine()->getDefaultCamera()->getPosition());
+	//printf("camera position: %f, %f, %f\n", v.x(), v.y(), v.z() );
+	//omicron::Quaternion de (getEngine()->getDefaultCamera()->getDerivedOrientation());
+	//printf("camera orientation: %f, %f, %f, %f derived\n", de.w(), de.x(), de.y(), de.z());
+	//omicron::Quaternion e (getEngine()->getDefaultCamera()->getOrientation());
+	//printf("camera orientation: %f, %f, %f, %f\n", e.w(), e.x(), e.y(), e.z());
 
 	/*/
 	printf("bullet:\n");
