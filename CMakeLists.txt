@@ -25,4 +25,6 @@ endif()
 ###############################################################################
 # Install commands
 # osgworks
-install(DIRECTORY ${CMAKE_BINARY_DIR}/src/osgWorks-prefix/src/osgWorks-build/lib/ DESTINATION omegalib/lib)
+if(${OMEGA_INSTALL_DEVLIBS})
+	install(DIRECTORY ${CMAKE_BINARY_DIR}/src/osgWorks-prefix/src/osgWorks-build/lib/ DESTINATION omegalib/lib)
+endif()
