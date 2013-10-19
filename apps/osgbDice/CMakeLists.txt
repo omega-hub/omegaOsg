@@ -10,5 +10,4 @@ target_link_libraries(osgbDice
 	omega
 	omegaToolkit
 	omegaOsg
-	${BULLET_LIBS}
 	${OSGBULLET_LIBS})
