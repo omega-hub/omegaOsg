@@ -101,7 +101,7 @@ elseif(APPLE)
 			
 			# Bild a shared lib on linux, or linking with apps will fail (why? Because little
 			# gnomes live in your computer to make your life miserable)
-			-DBUILD_SHARED_LIBS:BOOLEAN=true
+			-DBUILD_SHARED_LIBS:BOOLEAN=false
 			-DOSGBULLET_BUILD_APPLICATIONS=OFF
 			-DOSGBULLET_BUILD_EXAMPLES=OFF
 			-DOSGBULLET_INSTALL_DATA=OFF
