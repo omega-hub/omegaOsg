@@ -3,7 +3,7 @@ if(OMEGA_BUILD_OSG_LIB)
 	include(external/UseOpenSceneGraph.cmake)
 	include_directories(./)
 	include_directories(${OSG_INCLUDES})
-	add_subdirectory(src)
+    add_subdirectory(src)
 	add_subdirectory(apps/osgviewer)
 	
 	#add osgBullet into include
