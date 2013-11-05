@@ -6,7 +6,8 @@ if(WIN32)
 		osgWorks
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgw2.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
-		CMAKE_ARGS 
+        DEPENDS osg
+        CMAKE_ARGS 
 			-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
 			-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
 			-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
@@ -64,7 +65,8 @@ else()
 		osgWorks
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osgw2.tar.gz
 		CMAKE_GENERATOR ${OSGWORKS_GENERATOR}
-		CMAKE_ARGS 
+        DEPENDS osg
+        CMAKE_ARGS 
 			-DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
 			-DCMAKE_LINKER_FLAGS:STRING=${CMAKE_LINKER_FLAGS}
 			-DCMAKE_CXX_FLAGS:STRING=${OSGWorks_CXX_FLAGS}
@@ -116,7 +118,7 @@ else()
 		)
 endif()
 
-add_dependencies(osgWorks osg)
+#add_dependencies(osgWorks osg)
 
 set_target_properties(osgWorks PROPERTIES FOLDER "3rdparty")
 # define path to libraries built by the equalizer external project
