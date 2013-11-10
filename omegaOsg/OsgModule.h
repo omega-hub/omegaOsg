@@ -36,6 +36,7 @@
 #define __OSG_MODULE_H__
 
 #include "oosgbase.h"
+#include "OsgRenderPass.h"
 #include "omega/Engine.h"
 #include "omega/Application.h"
 
@@ -45,92 +46,82 @@
 
 namespace osg
 {
-	class Node;
-	class FrameStamp;
-	class NodeVisitor;
-	class Image;
+    class Node;
+    class FrameStamp;
+    class NodeVisitor;
+    class Image;
 }
 
 namespace osgDB
 {
-	class DatabasePager;
+    class DatabasePager;
 }
 
 namespace omegaOsg
 {
-	using namespace omega;
+    using namespace omega;
 
-	class OsgSceneObject;
+    class OsgSceneObject;
 
-	///////////////////////////////////////////////////////////////////////////
-	class OOSG_API OsgModule: public EngineModule
-	{
-	public:
-		//! The mode to use for scene depth partitioning
-		enum DepthPartitionMode
-		{
-			//! Depth partition is off. All nodes will be drawn using a single pair of near/far Z values.			
-			DepthPartitionOff, 
-			//! Depth partition is on. All nodes will be drawn in two batches, using the z value specified through setDepthPartitionZ at the threshold between near and far batches.			
-			DepthPartitionOn, 
-			//! Draw objects in the far depth partition batch only.
-			DepthPartitionFarOnly,
-			//! Draw objects in the near depth partition batch only.
-			DepthPartitionNearOnly
-		};
+    ///////////////////////////////////////////////////////////////////////////
+    class OOSG_API OsgModule: public EngineModule
+    {
+    public:
+        static OsgModule* instance();
+        
+        //! Convert an omegalib PixelData object to an osg::Image. PixelData and the osg Image
+        //! will share the same pixel buffer.
+        //! If transferBufferOwnership is set to true, the underlying pixel buffer will be owned
+        //! by the osg image: deleting the PixelData object will not deallocate the buffer. By
+        //! default, PixelData retains ownership of the buffer.
+        static osg::Image* pixelDataToOsg(PixelData* img, bool transferBufferOwnership = false);
 
-		static OsgModule* instance();
-		
-		//! Convert an omegalib PixelData object to an osg::Image. PixelData and the osg Image
-		//! will share the same pixel buffer.
-		//! If transferBufferOwnership is set to true, the underlying pixel buffer will be owned
-		//! by the osg image: deleting the PixelData object will not deallocate the buffer. By
-		//! default, PixelData retains ownership of the buffer.
-		static osg::Image* pixelDataToOsg(PixelData* img, bool transferBufferOwnership = false);
+        //! Force
+        void compileObjectsOnNextDraw();
+        
+    public:
+        OsgModule();
+        virtual ~OsgModule();
 
-		
-	public:
-		OsgModule();
-		virtual ~OsgModule();
+        virtual void initialize();
+        virtual void dispose();
+        virtual void initializeRenderer(Renderer* r);
+        virtual void update(const UpdateContext& context);
+        virtual void handleEvent(const Event& evt) {}
+        virtual bool handleCommand(const String& command);
+        //void loadScene(const String& filename);
+        //void addToScene(SceneNode* node);
 
-		virtual void initialize();
-		virtual void dispose();
-		virtual void initializeRenderer(Renderer* r);
-		virtual void update(const UpdateContext& context);
-		virtual void handleEvent(const Event& evt) {}
-		virtual bool handleCommand(const String& command);
-		//void loadScene(const String& filename);
-		//void addToScene(SceneNode* node);
+        osg::FrameStamp* getFrameStamp() { return myFrameStamp; }
+        osg::Node* getRootNode() { return myRootNode; }
+        void setRootNode(osg::Node* value);
 
-		osg::FrameStamp* getFrameStamp() { return myFrameStamp; }
-		osg::Node* getRootNode() { return myRootNode; }
-		void setRootNode(osg::Node* value);
+        osgDB::DatabasePager* getDatabasePager() { return myDatabasePager; }
 
-		osgDB::DatabasePager* getDatabasePager() { return myDatabasePager; }
+        // When set to true, osg will compute near and far planes automatically using scene geometry bounding boxes
+        // NOTE: this will lead to inconsistent depth testing with other render passes. 
+        void setAutoNearFar(bool value) { myAutoNearFar = value; }
+        bool getAutoNearFar() { return myAutoNearFar; }
 
-		// When set to true, osg will compute near and far planes automatically using scene geometry bounding boxes
-		// NOTE: this will lead to inconsistent depth testing with other render passes. 
-		void setAutoNearFar(bool value) { myAutoNearFar = value; }
-		bool getAutoNearFar() { return myAutoNearFar; }
+        void setDepthPartitionMode(OsgRenderPass::DepthPartitionMode mode) { myDepthPartitionMode = mode; }
+        OsgRenderPass::DepthPartitionMode getDepthPartitionMode() { return myDepthPartitionMode; }
+        void setDepthPartitionZ(float value) { myDepthPartitionZ = value; }
+        float getDepthPartitionZ() { return myDepthPartitionZ; }
 
-		void setDepthPartitionMode(DepthPartitionMode mode) { myDepthPartitionMode = mode; }
-		DepthPartitionMode getDepthPartitionMode() { return myDepthPartitionMode; }
-		void setDepthPartitionZ(float value) { myDepthPartitionZ = value; }
-		float getDepthPartitionZ() { return myDepthPartitionZ; }
+    private:
+        static OsgModule* mysInstance;
 
-	private:
-		static OsgModule* mysInstance;
+        bool myAutoNearFar;
 
-		bool myAutoNearFar;
+        OsgRenderPass::DepthPartitionMode myDepthPartitionMode;
+        float myDepthPartitionZ;
 
-		DepthPartitionMode myDepthPartitionMode;
-		float myDepthPartitionZ;
-
-		//OsgSceneObject* myRootSceneObject;
-		Ref<osg::Node> myRootNode;
-		Ref<osg::FrameStamp> myFrameStamp;
-		Ref<osg::NodeVisitor> myUpdateVisitor;
-		Ref<osgDB::DatabasePager> myDatabasePager;
-	};
+        //OsgSceneObject* myRootSceneObject;
+        Ref<osg::Node> myRootNode;
+        Ref<osg::FrameStamp> myFrameStamp;
+        Ref<osg::NodeVisitor> myUpdateVisitor;
+        Ref<osgDB::DatabasePager> myDatabasePager;
+        List< Ref<OsgRenderPass> > myRenderPasses;
+    };
 };
 #endif
