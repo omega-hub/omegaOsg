@@ -16,6 +16,7 @@ else()
     set(OSG_BASE_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src)
     set(OSG_BINARY_DIR ${OSG_BASE_DIR}/osg-build)
     set(OSG_SOURCE_DIR ${OSG_BASE_DIR}/osg)
+    set(OSG_INSTALL_DIR ${OSG_BASE_DIR}/osg-install)
 endif()
 
 if(WIN32)
@@ -44,7 +45,8 @@ else()
 			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
-		INSTALL_COMMAND ""
+            -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
+            INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 		)
 endif()
 set_target_properties(osg PROPERTIES FOLDER "3rdparty")
@@ -63,7 +65,7 @@ endif()
 
 # reduced component set.
 #set(OSG_COMPONENTS osg osgAnimation osgDB osgFX osgManipulator osgShadow osgUtil OpenThreads)
-set(OSG_COMPONENTS osg osgAnimation osgDB osgFX osgShadow osgTerrain osgText osgUtil osgVolume OpenThreads osgGA osgViewer osgSim)
+set(OSG_COMPONENTS osg osgAnimation osgDB osgManipulator osgFX osgShadow osgTerrain osgText osgUtil osgVolume OpenThreads osgGA osgViewer osgSim osgWidget)
 
 if(OMEGA_OS_WIN)
 	if(OMEGA_USE_EXTERNAL_OSG)
@@ -123,7 +125,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/UseOsgWorks.cmake)
 # Add osgWorks to openscenegraph includes and libraries (this simplified inclusion in other projects.
 # we consider osg and osgWorks as a single package.
 set(OSG_INCLUDES ${OSG_INCLUDES} ${OSGWORKS_INCLUDES} CACHE INTERNAL "")
+#set(OSG_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build CACHE INTERNAL "")
 set(OSG_LIBS ${OSG_LIBS} ${OSGWORKS_LIBS})
+set(OSG_INSTALL_DIR ${OSG_INSTALL_DIR} CACHE INTERNAL "")
 
 if(${OMEGA_INSTALL_DEVLIBS})
 	# on windows, copy a subset of the OpenSceneGraph package, to trim some of the fat.
