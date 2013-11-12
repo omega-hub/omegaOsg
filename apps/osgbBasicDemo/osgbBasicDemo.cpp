@@ -164,8 +164,8 @@ class OsgbBasicDemo : public EngineModule
 public:
 	OsgbBasicDemo()
 	{
-		myOsg = new OsgModule();
-		ModuleServices::addModule(myOsg);
+		myOsgModule = new OsgModule();
+		ModuleServices::addModule(myOsgModule);
 		myWorld = initBtPhysicsWorld();
 	}
 
@@ -173,16 +173,10 @@ public:
 	virtual void update(const UpdateContext& context);
 
 	btDynamicsWorld* initBtPhysicsWorld();
-	//void exitPhysics();
-
-	//virtual void clientMoveAndDisplay();
-
-	//virtual void displayCallback();
-	//void resetScene();
 
 private:
 
-	Ref<OsgModule> myOsg;
+	Ref<OsgModule> myOsgModule;
 	btDynamicsWorld* myWorld;
 	Ref<SceneNode> mySceneNode;
 	Actor* myInteractor;
@@ -190,16 +184,12 @@ private:
 
 	osg::MatrixTransform* myGround;
 
-	osg::MatrixTransform* myCol;
+	osg::MatrixTransform* myBox;
 
 	osgbDynamics::MotionState* myGroundMotionState;
 
-	osgbDynamics::MotionState* myColMotionState;
+	osgbDynamics::MotionState* myBoxMotionState;
 
-	//osg::Light* myLight;
-	//keep the collision shapes, for deletion/cleanup
-	//btAlignedObjectArray<btCollisionShape*>	myCollisionShapes;
-	
 };
 
 // initial steps to create bullet dynamics world
@@ -212,10 +202,10 @@ btDynamicsWorld* OsgbBasicDemo::initBtPhysicsWorld()
 	btConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 
 	btDynamicsWorld * dw = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
-	
+
 	//dw->setDebugDrawer(&gDebugDraw);
 	dw->setGravity( btVector3(0, -10, 0) );
- 
+
 	return ( dw );
 }
 
@@ -223,65 +213,50 @@ void OsgbBasicDemo::initialize()
 {
 	osg::Group* root = new osg::Group;
 
-	//create a few basic rigid bodies
-	osg::Vec3 halfLengths( 50., 50., 50. );
-	osg::Vec3 center( 0., -50., 0 );
-	btBoxShape* groundShape = new btBoxShape( osgbCollision::asBtVector3( halfLengths ) );
-	//groundShape->initializePolyhedralFeatures();
-//	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0),50);
-	
-	//myCollisionShapes.push_back(groundShape);
-
-	btTransform groundTransform;
-	groundTransform.setIdentity();
-	groundTransform.setOrigin( osgbCollision::asBtVector3( center ) );
-	
+	//create a ground
 	{
+		osg::Vec3 halfLengths( 50., 50., 50. );
+		osg::Vec3 center( 0., -50., 0 );
+
+		btBoxShape* groundShape = new btBoxShape( osgbCollision::asBtVector3( halfLengths ) );
+
+		btTransform groundTransform;
+		groundTransform.setIdentity();
+		groundTransform.setOrigin( osgbCollision::asBtVector3( center ) );
+
 		myGround = new osg::MatrixTransform( osgbCollision::asOsgMatrix( groundTransform ) );
 		myGround->addChild( osgBox( osg::Vec3(0,0,0), halfLengths ) );
 
 		btScalar mass( 0.0 );
 		btVector3 inertia( 0, 0, 0 );
-		/*/
-		osgbDynamics::MotionState* ms = new osgbDynamics::MotionState();
-		ms->setWorldTransform(groundTransform);
-		ms->setTransform(myGround);
-		btRigidBody::btRigidBodyConstructionInfo rb( mass, ms, groundShape, inertia );
-		//*/
-		//
+
 		myGroundMotionState = new osgbDynamics::MotionState();
 		myGroundMotionState->setWorldTransform(groundTransform);
 		myGroundMotionState->setTransform(myGround);
 		btRigidBody::btRigidBodyConstructionInfo rb( mass, myGroundMotionState, groundShape, inertia );
-		//*/
 		btRigidBody* body = new btRigidBody( rb );
 
 		myWorld->addRigidBody(body);
 	}
 
 	root->addChild(myGround);
-	
+
+	//create a few dynamic rigidbodies
+	// Re-using the same collision is better for memory usage and performance
 	{
-		//create a few dynamic rigidbodies
-		// Re-using the same collision is better for memory usage and performance
 
 		osg::Vec3 halfLengths(SCALING*1, SCALING*1,SCALING*1);
 
-		btBoxShape* colShape = new btBoxShape( osgbCollision::asBtVector3( halfLengths ) );
-		//btCollisionShape* colShape = new btSphereShape(btScalar(1.));
-		//myCollisionShapes.push_back(colShape);
+		btBoxShape* boxShape = new btBoxShape( osgbCollision::asBtVector3( halfLengths ) );
 
 		/// Create Dynamic Objects
 		btTransform startTransform;
 
 		btScalar	mass(1.f);
 
-		//rigidbody is dynamic if and only if mass is non zero, otherwise static
-		bool isDynamic = (mass != 0.f);
-
 		btVector3 localInertia(0,0,0);
-		if (isDynamic)
-			colShape->calculateLocalInertia(mass,localInertia);
+
+		boxShape->calculateLocalInertia(mass,localInertia);
 
 		float start_x = START_POS_X - ARRAY_SIZE_X/2.0;
 		float start_y = START_POS_Y;
@@ -298,42 +273,22 @@ void OsgbBasicDemo::initialize()
 					startTransform.setIdentity();
 					startTransform.setOrigin( SCALING * osgbCollision::asBtVector3(center) );
 
-					myCol = new osg::MatrixTransform( osgbCollision::asOsgMatrix(startTransform) );
-					myCol->addChild( osgBox( osg::Vec3(0,0,0), halfLengths ) );
+					myBox = new osg::MatrixTransform( osgbCollision::asOsgMatrix(startTransform) );
+					myBox->addChild( osgBox( osg::Vec3(0,0,0), halfLengths ) );
 
-					if (k==0 && i==0 && j==4) {
+					root->addChild( myBox );
 
-					myOsgSceneObj = new OsgSceneObject(myCol);
-					root->addChild( myOsgSceneObj->getTransformedNode() );
-					mySceneNode->addComponent(myOsgSceneObj);
-					//root->addChild( myCol );
-					}
-					else {
-						root->addChild( myCol );
-					}
-					
-					if (k==0 && i == 0 && j == 0) {
-						myColMotionState = new osgbDynamics::MotionState();
-						myColMotionState->setWorldTransform(startTransform);
-						myColMotionState->setTransform(myCol);
-						btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myColMotionState, colShape, localInertia);
-						btRigidBody* body = new btRigidBody(rbInfo);
-						myWorld->addRigidBody(body);
-					}
-					else {
-						osgbDynamics::MotionState* motionState = new osgbDynamics::MotionState();
-						motionState->setWorldTransform(startTransform);
-						motionState->setTransform(myCol);
-						btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, colShape, localInertia);
-						btRigidBody* body = new btRigidBody(rbInfo);
-						myWorld->addRigidBody(body);
-					}
-
+					myBoxMotionState = new osgbDynamics::MotionState();
+					myBoxMotionState->setWorldTransform(startTransform);
+					myBoxMotionState->setTransform(myBox);
+					btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myBoxMotionState, boxShape, localInertia);
+					btRigidBody* body = new btRigidBody(rbInfo);
+					myWorld->addRigidBody(body);
 				}
 			}
 		}
 	}
-    
+
 	mySceneNode->setPosition(0,20,0);
     mySceneNode->setBoundingBoxVisible(true);
     //mySceneNode->setBoundingBoxVisible(false);
@@ -342,7 +297,7 @@ void OsgbBasicDemo::initialize()
 	//getEngine()->getDefaultCamera()->setProjection(90, 1, 1, 200);
 	getEngine()->getDefaultCamera()->setPosition(0,20,80);
 	getEngine()->getDefaultCamera()->setOrientation(0.993938, -0.109776, -0.005964, -0.000659);
-	
+
     // Set the interactor style used to manipulate meshes.
     if(SystemManager::settingExists("config/interactor"))
     {
@@ -361,92 +316,17 @@ void OsgbBasicDemo::initialize()
 
 	//printf("Scene Node: (%lf, %lf, %lf)\n", mySceneNode->getPosition().x(), mySceneNode->getPosition().y(), mySceneNode->getPosition().z());
 
-	/*/
-	printf("bullet:\n");
-	for (int i=0;i<10;i++)
-	{
-		printf("object %d: (worldtrans) (%lf, %lf, %lf)\n", i,
-			myWorld->getCollisionObjectArray().at(i)->getWorldTransform().getOrigin().x(),
-			myWorld->getCollisionObjectArray().at(i)->getWorldTransform().getOrigin().y(),
-			myWorld->getCollisionObjectArray().at(i)->getWorldTransform().getOrigin().z());
-	}
-	printf("\n");
-
-	printf("osg:\n");
-	for (int i=0;i<10;i++)
-	{
-		printf("object %d: (myOsg.child(i)) (%lf, %lf, %lf)\n", i,
-			myOsg->getRootNode()->asGroup()->getChild(i)->asTransform()->asMatrixTransform()->getMatrix().getTrans().x(),
-			myOsg->getRootNode()->asGroup()->getChild(i)->asTransform()->asMatrixTransform()->getMatrix().getTrans().y(),
-			myOsg->getRootNode()->asGroup()->getChild(i)->asTransform()->asMatrixTransform()->getMatrix().getTrans().z());
-	}
-	//*/
-
-	/*/ Setup shading
-	myLight = new osg::Light;
-	myLight->setLightNum(0);
-	myLight->setPosition(osg::Vec4(100, 100, 0, 1.0));
-	myLight->setAmbient(osg::Vec4(0.1f,0.1f,0.2f,1.0f));
-	myLight->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-	myLight->setSpotExponent(0);
-	myLight->setSpecular(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
-
-	osg::LightSource* ls = new osg::LightSource();
-	ls->setLight(myLight);
-	ls->setStateSetModes(*root->getOrCreateStateSet(), osg::StateAttribute::ON);
-
-	root->addChild(ls);
-	//*/
-
 	root->addChild( createAxes( ).get( ) );
 
 	// Set the osg node as the root node
-    myOsg->setRootNode(root);
-	
+    myOsgModule->setRootNode(root);
+
 }
 
 void OsgbBasicDemo::update(const UpdateContext& context)
 {
 	double elapsed = 1./30.;
 	myWorld->stepSimulation( elapsed, 4, elapsed/2. );
-
-	//omicron::Vector3f dv (getEngine()->getDefaultCamera()->getDerivedPosition());
-	//printf("camera position: %f, %f, %f derived\n", dv.x(), dv.y(), dv.z() );
-	//omicron::Vector3f v (getEngine()->getDefaultCamera()->getPosition());
-	//printf("camera position: %f, %f, %f\n", v.x(), v.y(), v.z() );
-	//omicron::Quaternion de (getEngine()->getDefaultCamera()->getDerivedOrientation());
-	//printf("camera orientation: %f, %f, %f, %f derived\n", de.w(), de.x(), de.y(), de.z());
-	//omicron::Quaternion e (getEngine()->getDefaultCamera()->getOrientation());
-	//printf("camera orientation: %f, %f, %f, %f\n", e.w(), e.x(), e.y(), e.z());
-
-	/*/
-	printf("bullet:\n");
-	for (int i=0;i<5;i++)
-	{
-		printf("object %d: (worldtrans) (%lf, %lf, %lf)\n", i,
-			myWorld->getCollisionObjectArray().at(i)->getWorldTransform().getOrigin().x(),
-			myWorld->getCollisionObjectArray().at(i)->getWorldTransform().getOrigin().y(),
-			myWorld->getCollisionObjectArray().at(i)->getWorldTransform().getOrigin().z());
-	}
-	//*/
-	/*/
-	printf("motion:\n");
-	btTransform world;
-	myGroundMotionState->getWorldTransform( world );
-	printf("ground: (worldtrans): (%lf, %lf, %lf)\n", world.getOrigin().x(), world.getOrigin().y(), world.getOrigin().z());
-		myColMotionState->getWorldTransform( world );
-		printf("object 0: (worldtrans): (%lf, %lf, %lf)\n", world.getOrigin().x(), world.getOrigin().y(), world.getOrigin().z());
-	//*/
-	/*/
-	printf("osg:\n");
-	for (int i=0;i<5;i++)
-	{
-		printf("object %d: (myOsg.child(i)) (%lf, %lf, %lf)\n", i,
-			myOsg->getRootNode()->asGroup()->getChild(i)->asTransform()->asMatrixTransform()->getMatrix().getTrans().x(),
-			myOsg->getRootNode()->asGroup()->getChild(i)->asTransform()->asMatrixTransform()->getMatrix().getTrans().y(),
-			myOsg->getRootNode()->asGroup()->getChild(i)->asTransform()->asMatrixTransform()->getMatrix().getTrans().z());
-	}
-	//*/
 }
 
 int main(int argc, char** argv)
