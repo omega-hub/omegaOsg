@@ -60,8 +60,8 @@ using namespace osgUtil;
 ///////////////////////////////////////////////////////////////////////////////
 SceneView::SceneView( osgDB::DatabasePager* dp)
 {
-	//_displaySettings = ds;
-	_databasePager = dp;
+    //_displaySettings = ds;
+    _databasePager = dp;
 
     //_prioritizeTextures = false;
     
@@ -109,7 +109,7 @@ SceneView::SceneView(const SceneView& rhs, const osg::CopyOp& copyop):
 ///////////////////////////////////////////////////////////////////////////////
 SceneView::~SceneView()
 {
-	omega::omsg("~SceneView");
+    omega::omsg("~SceneView");
 }
 
 //class NH: public osg::NotifyHandler
@@ -160,7 +160,7 @@ void SceneView::setSceneData(osg::Node* node)
     if (_camera.valid() && _initVisitor.valid())
     {
         _initVisitor->reset();
-		_initVisitor->setDatabaseRequestHandler(_databasePager);
+        _initVisitor->setDatabaseRequestHandler(_databasePager);
         _initVisitor->setFrameStamp(_frameStamp.get());
         
         GLObjectsVisitor* dlv = dynamic_cast<GLObjectsVisitor*>(_initVisitor.get());
@@ -181,8 +181,8 @@ void SceneView::initialize()
 {
     _initCalled = true;
 
-	//osg::setNotifyLevel(INFO);
-	//osg::setNotifyHandler(new NH());
+    //osg::setNotifyLevel(INFO);
+    //osg::setNotifyHandler(new NH());
     osg::CullSettings::setDefaults();
 
     //if (!_globalStateSet) _globalStateSet = new osg::StateSet;
@@ -191,23 +191,23 @@ void SceneView::initialize()
     // enable lighting by default.
     //_globalStateSet->setMode(GL_LIGHTING, osg::StateAttribute::ON);
 
-	osg::State* state = new State();
+    osg::State* state = new State();
     _renderInfo.setState(state);
-	
-	state->setGlobalDefaultModeValue(GL_DEPTH_TEST, true);
-	state->setGlobalDefaultModeValue(GL_LIGHTING, true);
+    
+    state->setGlobalDefaultModeValue(GL_DEPTH_TEST, true);
+    state->setGlobalDefaultModeValue(GL_LIGHTING, true);
     
     _stateGraph = new StateGraph;
-	_renderStage = new RenderStage();
+    _renderStage = new RenderStage();
 
     //_updateVisitor = new UpdateVisitor;
 
     _cullVisitor = CullVisitor::create();
-	_cullVisitor->setDatabaseRequestHandler(_databasePager);
-	// Disable default computing of near/far plane: Equalizer takes care of this.
+    _cullVisitor->setDatabaseRequestHandler(_databasePager);
+    // Disable default computing of near/far plane: Equalizer takes care of this.
 
-	_cullVisitor->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-	_cullVisitor->setCullingMode(osg::CullSettings::VIEW_FRUSTUM_CULLING);
+    _cullVisitor->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+    _cullVisitor->setCullingMode(osg::CullSettings::VIEW_FRUSTUM_CULLING);
 
     _cullVisitor->setStateGraph(_stateGraph.get());
     _cullVisitor->setRenderStage(_renderStage.get());
@@ -215,9 +215,9 @@ void SceneView::initialize()
     //_globalStateSet->setGlobalDefaults();
 
     // Do not clear the frame buffer - the omegalib engine takes care of this.
-	_camera->setClearMask(0);
-	
-	_localStateSet = new osg::StateSet;
+    _camera->setClearMask(0);
+    
+    _localStateSet = new osg::StateSet;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -278,8 +278,8 @@ void SceneView::updateUniforms(int eye)
         uniform->set(osg::Matrix::inverse(_camera->getViewMatrix()));
     }
 
-	// Add the eye uniform
-	osg::Uniform* uniformEye = _localStateSet->getOrCreateUniform("unif_Eye",osg::Uniform::INT);
+    // Add the eye uniform
+    osg::Uniform* uniformEye = _localStateSet->getOrCreateUniform("unif_Eye",osg::Uniform::INT);
     uniformEye->set(eye);
 }
 
@@ -291,7 +291,7 @@ void SceneView::cull(int eye)
     if (_camera->getNodeMask()==0) return;
 
     _renderInfo.setView(_camera->getView());
-	_renderInfo.pushCamera(_camera.get());
+    _renderInfo.pushCamera(_camera.get());
 
     // update the active uniforms
     updateUniforms(eye);
@@ -310,7 +310,7 @@ void SceneView::cull(int eye)
     // we in theory should be able to be able to bypass reset, but we'll call it just incase.
     //_state->reset();
    
-	state->initializeExtensionProcs();
+    state->initializeExtensionProcs();
     state->setFrameStamp(_frameStamp.get());
     //state->setDisplaySettings(_displaySettings.get());
 
@@ -322,17 +322,17 @@ void SceneView::cull(int eye)
         CullVisitor::value_type zFar = _cullVisitor->getCalculatedFarPlane();
         _cullVisitor->clampProjectionMatrix(_camera->getProjectionMatrix(),zNear,zFar);
     }
-	_renderInfo.popCamera();
+    _renderInfo.popCamera();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 bool SceneView::cullStage(
-	const osg::Matrixd& projection,
-	const osg::Matrixd& modelview,
-	osgUtil::CullVisitor* cullVisitor, 
-	osgUtil::StateGraph* rendergraph, 
-	osgUtil::RenderStage* renderStage, 
-	osg::Viewport *viewport)
+    const osg::Matrixd& projection,
+    const osg::Matrixd& modelview,
+    osgUtil::CullVisitor* cullVisitor, 
+    osgUtil::StateGraph* rendergraph, 
+    osgUtil::RenderStage* renderStage, 
+    osg::Viewport *viewport)
 {
     if (!_camera || !viewport) return false;
 
@@ -343,9 +343,9 @@ bool SceneView::cullStage(
     if (_camera->containsOccluderNodes())
     {
         if (!_collectOccludersVisitor) 
-		{
-			_collectOccludersVisitor = new osg::CollectOccludersVisitor;
-		}
+        {
+            _collectOccludersVisitor = new osg::CollectOccludersVisitor;
+        }
         _collectOccludersVisitor->inheritCullSettings(*this);
         _collectOccludersVisitor->reset();
         _collectOccludersVisitor->setFrameStamp(_frameStamp.get());
@@ -372,8 +372,8 @@ bool SceneView::cullStage(
         
         cullVisitor->getOccluderList().clear();
         std::copy(
-			_collectOccludersVisitor->getCollectedOccluderSet().begin(),
-			_collectOccludersVisitor->getCollectedOccluderSet().end(), std::back_insert_iterator<CullStack::OccluderList>(cullVisitor->getOccluderList()));
+            _collectOccludersVisitor->getCollectedOccluderSet().begin(),
+            _collectOccludersVisitor->getCollectedOccluderSet().end(), std::back_insert_iterator<CullStack::OccluderList>(cullVisitor->getOccluderList()));
     }
     
     cullVisitor->reset();
@@ -417,7 +417,7 @@ bool SceneView::cullStage(
     cullVisitor->pushProjectionMatrix(proj.get());
 
     // traverse the scene graph to generate the rendergraph.        
-	cullVisitor->pushModelViewMatrix(mv.get(),osg::Transform::ABSOLUTE_RF);
+    cullVisitor->pushModelViewMatrix(mv.get(),osg::Transform::ABSOLUTE_RF);
 
     // If the camera has a cullCallback execute the callback which has the  
     // requirement that it must traverse the camera's children.
@@ -436,7 +436,7 @@ bool SceneView::cullStage(
     //if (_secondaryStateSet.valid()) cullVisitor->popStateSet();
     //if (_globalStateSet.valid()) cullVisitor->popStateSet();
     
-	renderStage->sort();
+    renderStage->sort();
 
     // prune out any empty StateGraph children.
     // note, this would be not required if the rendergraph had been
@@ -449,8 +449,8 @@ bool SceneView::cullStage(
     _dynamicObjectCount += renderStage->computeNumberOfDynamicRenderLeaves();
 
     bool computeNearFar = 
-		(cullVisitor->getComputeNearFarMode() != osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR) && 
-		getSceneData() != 0;
+        (cullVisitor->getComputeNearFarMode() != osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR) && 
+        getSceneData() != 0;
     return computeNearFar;
 }
 
@@ -522,17 +522,17 @@ void SceneView::draw()
     _localStateSet->setAttribute(_camera->getViewport());
 
     _renderInfo.setView(_camera->getView());
-	_renderInfo.pushCamera(_camera.get());
+    _renderInfo.pushCamera(_camera.get());
 
-	// Make sure depth test is enabled (on a linux install, it somewhat 
-	// ignored the global default set in the osg::State)
-	glEnable(GL_DEPTH_TEST);
-	
+    // Make sure depth test is enabled (on a linux install, it somewhat 
+    // ignored the global default set in the osg::State)
+    glEnable(GL_DEPTH_TEST);
+    
     // bog standard draw.
     _renderStage->drawPreRenderStages(_renderInfo,previous);
     _renderStage->draw(_renderInfo,previous);
     
-	_renderInfo.popCamera();
+    _renderInfo.popCamera();
 
     // re apply the defalt OGL state.
     state->popAllStateSets();
@@ -558,14 +558,14 @@ void SceneView::draw()
 ///////////////////////////////////////////////////////////////////////////////
 unsigned int SceneView::getTriangleCount()
 { 
-	osgUtil::Statistics osgStats;
-	osgStats.setType(osgUtil::Statistics::STAT_PRIMS);
-	if(_renderStage->getStats(osgStats))
-	{
-		unsigned int count = osgStats.getPrimitiveCountMap()[GL_TRIANGLES];
-		_triangleCount = count;
-	}
-	return _triangleCount;
+    osgUtil::Statistics osgStats;
+    osgStats.setType(osgUtil::Statistics::STAT_PRIMS);
+    if(_renderStage->getStats(osgStats))
+    {
+        unsigned int count = osgStats.getPrimitiveCountMap()[GL_TRIANGLES];
+        _triangleCount = count;
+    }
+    return _triangleCount;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -583,12 +583,12 @@ void SceneView::clearReferencesToDependentCameras()
 ///////////////////////////////////////////////////////////////////////////////
 void SceneView::setAutoNearFar(bool value)
 {
-	if(value)
-	{
-		_cullVisitor->setComputeNearFarMode(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
-	}
-	else
-	{
-		_cullVisitor->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-	}
+    if(value)
+    {
+        _cullVisitor->setComputeNearFarMode(osg::CullSettings::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES);
+    }
+    else
+    {
+        _cullVisitor->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
+    }
 }
