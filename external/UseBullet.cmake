@@ -10,6 +10,7 @@ if(WIN32)
 else()
 	set(BULLET_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
 endif()
+
 ExternalProject_Add(
 	bullet
 	URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-2.81-rev2613.tar.gz
@@ -20,7 +21,9 @@ ExternalProject_Add(
 		-DBUILD_AMD_OPENCL_DEMOS=OFF
 		-DBUILD_CPU_DEMOS=OFF
 		-DBUILD_DEMOS=OFF
-		INSTALL_COMMAND ""
+    #-DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_SOURCE_DIR}/modules/omegaOsg/osgBullet-prefix/src/bullet-install
+    #INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
+    INSTALL_COMMAND ""
 	)
 set_target_properties(bullet PROPERTIES FOLDER "3rdparty")
 
@@ -41,14 +44,14 @@ if(OMEGA_OS_WIN)
 elseif(OMEGA_OS_LINUX)
 	# on Linux, libs end up in a directory with theyr same name, instead of the common 'lib' dir.
     foreach( C ${BULLET_COMPONENTS} )
-		set(${C}_LIBRARY ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a)
-		set(${C}_LIBRARY_DEBUG ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a)
-		set(BULLET_LIBS ${BULLET_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
+		set(${C}_LIBRARY ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a CACHE INTERNAL "")
+		set(${C}_LIBRARY_DEBUG ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a CACHE INTERNAL "")
+		set(BULLET_LIBS ${BULLET_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
 	endforeach()
 elseif(APPLE)
 	foreach( C ${BULLET_COMPONENTS} )
-		set(${C}_LIBRARY ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a)
-		set(${C}_LIBRARY_DEBUG ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a)
-		set(BULLET_LIBS ${BULLET_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
+		set(${C}_LIBRARY ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a CACHE INTERNAL "")
+		set(${C}_LIBRARY_DEBUG ${BULLET_BASE_DIR}/bullet-build/src/${C}/lib${C}.a CACHE INTERNAL "")
+		set(BULLET_LIBS ${BULLET_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
 	endforeach()
 endif(OMEGA_OS_WIN)
