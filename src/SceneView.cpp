@@ -33,6 +33,8 @@
  *	A customized wrapper around an openscenegraph scene
  ******************************************************************************/
 #include "omega/osystem.h"
+#include "omega/SystemManager.h"
+#include "omega/PythonInterpreter.h"
 #include "omegaOsg/SceneView.h"
 
 #include <osgUtil/Statistics>
@@ -163,21 +165,22 @@ void SceneView::setSceneData(osg::Node* node)
 ///////////////////////////////////////////////////////////////////////////////
 void SceneView::compileGLObjects()
 {
-    if (_camera.valid() && _initVisitor.valid())
+    omega::PythonInterpreter* py = omega::SystemManager::instance()->getScriptInterpreter();
+    //py->queueCommand("print('>>>>>>> compiling GL objects')");
+    //if (_camera.valid() && _initVisitor.valid())
     {
-        _initVisitor->reset();
-        _initVisitor->setDatabaseRequestHandler(_databasePager);
-        _initVisitor->setFrameStamp(_frameStamp.get());
-        
-        GLObjectsVisitor* dlv = dynamic_cast<GLObjectsVisitor*>(_initVisitor.get());
-        if (dlv) dlv->setState(_renderInfo.getState());
+        omicron::Ref<GLObjectsVisitor> dlv = new GLObjectsVisitor();
+        dlv->reset();
+        dlv->setDatabaseRequestHandler(_databasePager);
+        dlv->setFrameStamp(_frameStamp.get());
+        dlv->setState(_renderInfo.getState());
         
         if (_frameStamp.valid())
         {
-             _initVisitor->setTraversalNumber(_frameStamp->getFrameNumber());
+             dlv->setTraversalNumber(_frameStamp->getFrameNumber());
         }
-        
-        _camera->accept(*_initVisitor.get());
+        _camera->accept(*(dlv.get()));
+	//py->queueCommand("print('>>>>>>> GL objects compiled')");
         
     } 
 }

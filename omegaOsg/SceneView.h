@@ -124,9 +124,9 @@ class SceneView : public osg::Object, public osg::CullSettings
         osg::RenderInfo& getRenderInfo() { return _renderInfo; }
         const osg::RenderInfo& getRenderInfo() const { return _renderInfo; }
 
-        void setInitVisitor(osg::NodeVisitor* av) { _initVisitor = av; }
-        osg::NodeVisitor* getInitVisitor() { return _initVisitor.get(); }
-        const osg::NodeVisitor* getInitVisitor() const { return _initVisitor.get(); }
+        //void setInitVisitor(osg::NodeVisitor* av) { _initVisitor = av; }
+        //osg::NodeVisitor* getInitVisitor() { return _initVisitor.get(); }
+        //const osg::NodeVisitor* getInitVisitor() const { return _initVisitor.get(); }
 
         void setCullVisitor(osgUtil::CullVisitor* cv) { _cullVisitor = cv; }
         osgUtil::CullVisitor* getCullVisitor() { return _cullVisitor.get(); }
@@ -217,7 +217,7 @@ class SceneView : public osg::Object, public osg::CullSettings
         osg::RenderInfo                             _renderInfo;
         
         bool                                        _initCalled;
-        osg::ref_ptr<osg::NodeVisitor>              _initVisitor;
+        //osg::ref_ptr<osg::NodeVisitor>              _initVisitor;
         osg::ref_ptr<osgUtil::CullVisitor>          _cullVisitor;
         osg::ref_ptr<osgUtil::StateGraph>           _stateGraph;
         osg::ref_ptr<osgUtil::RenderStage>          _renderStage;
