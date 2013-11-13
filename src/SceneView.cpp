@@ -157,6 +157,12 @@ void SceneView::setSceneData(osg::Node* node)
     // add the new one in.
     _camera->addChild(node);
 
+    compileGLObjects();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void SceneView::compileGLObjects()
+{
     if (_camera.valid() && _initVisitor.valid())
     {
         _initVisitor->reset();

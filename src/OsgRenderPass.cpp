@@ -178,11 +178,7 @@ void OsgRenderPass::render(Renderer* client, const DrawContext& context)
     if(myCompileGLOBjects)
     {
         myCompileGLOBjects = false;
-        osgViewer::Renderer* r = dynamic_cast<osgViewer::Renderer*>(mySceneView->getCamera()->getRenderer());
-        if(r != NULL)
-        {
-            r->compile();
-        }
+        mySceneView->compileGLObjects();
     }
 
     //sInitLock.lock();

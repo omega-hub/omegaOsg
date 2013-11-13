@@ -72,6 +72,8 @@ class SceneView : public osg::Object, public osg::CullSettings
          *  an osg::Scene but can be any osg::Node type.
          */
         void setSceneData(osg::Node* node);
+
+        void compileGLObjects();
         
         /** Get the scene data to view. The data will typically be
          *  an osg::Scene but can be any osg::Node type.
