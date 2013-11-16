@@ -49,6 +49,7 @@ else()
             INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 		)
 endif()
+
 set_target_properties(osg PROPERTIES FOLDER "3rdparty")
 
 if(OMEGA_USE_EXTERNAL_OSG)
@@ -72,7 +73,6 @@ if(OMEGA_OS_WIN)
 		foreach( C ${OSG_COMPONENTS} )
 			set(${C}_LIBRARY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}.lib)
 			set(${C}_LIBRARY_DEBUG ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}d.lib)
-			#set(${C}_INCLUDE_DIR ${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include)
 			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
 		endforeach()
 
@@ -95,11 +95,10 @@ if(OMEGA_OS_WIN)
 elseif(OMEGA_OS_LINUX)
 	# Linux
 	foreach( C ${OSG_COMPONENTS} )
-			set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}.so)
-			set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}d.so)
-		#set(${C}_INCLUDE_DIR ${OSG_INCLUDES})
+		set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}.so)
+		set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}d.so)
 		set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
-	endforeach()
+  endforeach()
 
 	# On linux the .so files do not need to be copied to the bin folder
 	#if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -114,7 +113,6 @@ else()
 	foreach( C ${OSG_COMPONENTS} )
 		set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}.dylib)
 		set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}d.dylib)
-		#set(${C}_INCLUDE_DIR ${OSG_INCLUDES})
 		set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
 	endforeach()
 	# file(COPY ${EXTLIB_DIR}/lib/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
@@ -125,7 +123,6 @@ include(${CMAKE_CURRENT_LIST_DIR}/UseOsgWorks.cmake)
 # Add osgWorks to openscenegraph includes and libraries (this simplified inclusion in other projects.
 # we consider osg and osgWorks as a single package.
 set(OSG_INCLUDES ${OSG_INCLUDES} ${OSGWORKS_INCLUDES} CACHE INTERNAL "")
-#set(OSG_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build CACHE INTERNAL "")
 set(OSG_LIBS ${OSG_LIBS} ${OSGWORKS_LIBS})
 set(OSG_INSTALL_DIR ${OSG_INSTALL_DIR} CACHE INTERNAL "")
 

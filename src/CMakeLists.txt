@@ -98,12 +98,12 @@ endif(APPLE)
 ###############################################################################
 # Setup compile info
 add_library( omegaOsg SHARED ${srcs} ${headers})
-add_dependencies(omegaOsg osg osgWorks)
 
 ###############################################################################
 # Setup link info.
 target_link_libraries(omegaOsg 
 	omega freetype ${OSG_LIBS} ${FBX_LIBNAME} ${TARGET_EXTERNAL_LIBRARIES})
+add_dependencies(omegaOsg osgWorks osgBullet)
 
 if(OMEGAOSG_USE_INVENTOR)
     if(INVENTOR_FOUND)
