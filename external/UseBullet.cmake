@@ -25,7 +25,7 @@ ExternalProject_Add(
     -DPKGCONFIG_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install/lib/pckconfig 
     -DINCLUDE_INSTALL_DIR=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install/include
     -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install
-  INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
+  #INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 )
 
 set_target_properties(bullet PROPERTIES FOLDER "3rdparty")
