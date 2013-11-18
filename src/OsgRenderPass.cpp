@@ -93,9 +93,9 @@ void OsgRenderPass::initialize()
     myFarSceneView->getState()->setContextID(ctxid);
 
     StatsManager* sm = SystemManager::instance()->getStatsManager();
-    myTriangleCountStat = sm->createStat(ostr("osg tris %1%", %ctxid), Stat::Primitive);
-    myCullTimeStat = sm->createStat(ostr("osg cull %1%", %ctxid), Stat::Time);
-    myDrawTimeStat = sm->createStat(ostr("osg draw %1%", %ctxid), Stat::Time);
+    myTriangleCountStat = sm->createStat(ostr("osg tris %1%", %ctxid), StatsManager::Primitive);
+    myCullTimeStat = sm->createStat(ostr("osg cull %1%", %ctxid), StatsManager::Time);
+    myDrawTimeStat = sm->createStat(ostr("osg draw %1%", %ctxid), StatsManager::Time);
 
     sInitLock.unlock();
 }

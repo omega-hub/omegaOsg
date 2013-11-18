@@ -94,9 +94,9 @@ namespace omegaOsg
         bool myCompileGLOBjects;
         
         // Statistics
-        Stat* myTriangleCountStat;
-        Stat* myCullTimeStat;
-        Stat* myDrawTimeStat;
+        Ref<Stat> myTriangleCountStat;
+        Ref<Stat> myCullTimeStat;
+        Ref<Stat> myDrawTimeStat;
     };
 };
 #endif
