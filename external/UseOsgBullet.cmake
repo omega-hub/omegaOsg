@@ -113,10 +113,11 @@ if(WIN32)
 		${OSGBULLET_ARGS}
 	)
 else()
+	set(OsgInstallType "Source And Build Tree")
 	#set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOSGWORKS_STATIC")
 	set(OSGBULLET_ARGS
 		#osg
-		-DOSGInstallType:STRING="Source And Build Tree"
+		-DOSGInstallType:STRING=${OsgInstallType}
 		-DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
 		-DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
 		#Bullet
