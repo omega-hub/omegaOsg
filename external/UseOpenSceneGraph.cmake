@@ -58,8 +58,7 @@ if(OMEGA_USE_EXTERNAL_OSG)
 		${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
 else()
 	set(OSG_INCLUDES 
-		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg/include 
-		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build/include)
+		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-install/include)
 endif()
 # NOTE: OSG_INCLUDES is set as a variable in the parent scope, so it can be accessed by other modules like cyclops.
 #set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)
