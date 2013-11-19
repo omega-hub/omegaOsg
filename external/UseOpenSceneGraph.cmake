@@ -23,7 +23,7 @@ if(WIN32)
 	ExternalProject_Add(
 		osg
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
-		CMAKE_ARGS 
+		CMAKE_ARGS
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
@@ -37,7 +37,7 @@ else()
 	ExternalProject_Add(
 		osg
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
-		CMAKE_ARGS 
+		CMAKE_ARGS
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
@@ -46,6 +46,7 @@ else()
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
             -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
+            -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
             INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 		)
 endif()
@@ -53,12 +54,13 @@ endif()
 set_target_properties(osg PROPERTIES FOLDER "3rdparty")
 
 if(OMEGA_USE_EXTERNAL_OSG)
-    set(OSG_INCLUDES 
-		${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include 
+    set(OSG_INCLUDES
+		${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include
 		${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
 else()
-	set(OSG_INCLUDES 
-		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-install/include)
+	set(OSG_INCLUDES
+		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg/include
+		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build/include)
 endif()
 # NOTE: OSG_INCLUDES is set as a variable in the parent scope, so it can be accessed by other modules like cyclops.
 #set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)
@@ -70,9 +72,9 @@ set(OSG_COMPONENTS osg osgAnimation osgDB osgManipulator osgFX osgShadow osgTerr
 if(OMEGA_OS_WIN)
 	if(OMEGA_USE_EXTERNAL_OSG)
 		foreach( C ${OSG_COMPONENTS} )
-			set(${C}_LIBRARY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}.lib CACHE INTERNAL "")
-			set(${C}_LIBRARY_DEBUG ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}d.lib CACHE INTERNAL "")
-			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
+			set(${C}_LIBRARY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}.lib)
+			set(${C}_LIBRARY_DEBUG ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}d.lib)
+			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
 		endforeach()
 
 		# Copy the dlls into the target directories
@@ -80,16 +82,16 @@ if(OMEGA_OS_WIN)
 		file(COPY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
 	else()
 		foreach( C ${OSG_COMPONENTS} )
-			set(${C}_LIBRARY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}/${C}.lib CACHE INTERNAL "")
-			set(${C}_LIBRARY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}/${C}d.lib CACHE INTERNAL "")
-			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
+			set(${C}_LIBRARY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}/${C}.lib)
+			set(${C}_LIBRARY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}/${C}d.lib)
+			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
 		endforeach()
 
 		# Copy the dlls into the target directories
 		#file(COPY ${OSG_BUILD_DIR}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG} PATTERN "*.dll")
 		#file(COPY ${EXTLIB_DIR}/bin/release/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
 	endif()
-	
+
 
 elseif(OMEGA_OS_LINUX)
 	# Linux
