@@ -24,19 +24,23 @@ if(WIN32)
 else()
 	ExternalProject_Add(
 		collada
-        #DEPENDS minizip
+        DEPENDS minizip
         URL "http://sourceforge.net/projects/collada-dom/files/Collada%20DOM/Collada%20DOM%202.3/collada-dom-2.3.tgz/download?use_mirror=kent"
+        CMAKE_ARGS
+            -DMINIZIP_INCLUDE_DIR=${MINIZIP_INCLUDE_DIR}
+            -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH} ${MINIZIP_LIBRARY_PATH}"
+            -DMINIZIP_LIBRARY=${MINIZIP_LIBRARY}
+            -DOPT_COLLADA15=OFF
         PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_LIST_DIR}/collada-dom-2.3.patch
 		INSTALL_COMMAND ""
 	)
 	
-ExternalProject_Get_Property(collada BINARY_DIR SOURCE_DIR)
-    # NOTE: setting the GDAL_INCLUDES as an internal cache variable, makes it accessible to other modules.
-	if(APPLE)
-		set(LIB_SUFFIX dylib)
-	else()
-		set(LIB_SUFFIX so)
-	endif()
+    ExternalProject_Get_Property(collada BINARY_DIR SOURCE_DIR)
+    if(APPLE)
+        set(LIB_SUFFIX dylib)
+    else()
+        set(LIB_SUFFIX so)
+    endif()
 
     set(COLLADA_INCLUDE_DIR ${SOURCE_DIR}/dom/include CACHE INTERNAL "")
     set(COLLADA_LIBRARY  ${BINARY_DIR}/dom/src/1.4/libcollada14dom.${LIB_SUFFIX} CACHE INTERNAL "")

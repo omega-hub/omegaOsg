@@ -21,24 +21,19 @@ if(WIN32)
 	# Copy the dlls into the target directories
 	file(COPY ${EXTLIB_DIR}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG} PATTERN "*.dll")
 	file(COPY ${EXTLIB_DIR}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
-else()
-	ExternalProject_Add(
-		collada
-		DEPENDS minizip
-        URL "http://sourceforge.net/projects/collada-dom/files/Collada%20DOM/Collada%20DOM%202.3/collada-dom-2.3.tgz"
-		INSTALL_COMMAND ""
-	)
-	
-ExternalProject_Get_Property(collada BINARY_DIR)
-    # NOTE: setting the GDAL_INCLUDES as an internal cache variable, makes it accessible to other modules.
-	if(APPLE)
-		set(LIB_SUFFIX dylib)
-	else()
-		set(LIB_SUFFIX so)
-	endif()
+else(APPLE)
 
-    set(COLLADA_LIBRARY  ${BINARY_DIR}/dom/src/1.4/libcollada14dom.${LIB_SUFFIX} CACHE INTERNAL "")
+    set(MINIZIP_NAME minizip)
+    set(MINIZIP_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/minizip CACHE INTERNAL "")
+
+    if(NOT EXISTS ${MINIZIP_DIR})
+        message(STATUS "Unpacking minizip.")
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzvf ${CMAKE_CURRENT_LIST_DIR}/minizip.tar.gz WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/modules/omegaOsg)
+    endif()
+
+    # create phony target minizip
+    add_custom_target(minizip)
+    set(MINIZIP_INCLUDE_DIR ${MINIZIP_DIR}/osx/include CACHE INTERNAL "")
+    set(MINIZIP_LIBRARY ${MINIZIP_DIR}/osx/lib/libminizip.dylib CACHE INTERNAL "")
+    set(MINIZIP_LIBRARY_PATH ${MINIZIP_DIR}/osx/lib CACHE INTERNAL "")
 endif()
-
-
-set_target_properties(collada PROPERTIES FOLDER "modules/omegaOsg")

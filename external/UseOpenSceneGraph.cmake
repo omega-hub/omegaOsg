@@ -1,7 +1,12 @@
 include(ExternalProject)
 
 set(OMEGA_USE_EXTERNAL_OSG false CACHE BOOL "Enable to use an external osg build instead of the built-in one.")
-set(OMEGA_OSG_ENABLE_COLLADA_DOM false CACHE BOOL "Enable the Collada plugin for OSG.")
+if(_OMEGA_OSG_ENABLE_COLLADA_DOM)
+    set(OMEGA_OSG_ENABLE_COLLADA_DOM true CACHE BOOL "Enable the Collada plugin for OSG.")
+else()
+    set(OMEGA_OSG_ENABLE_COLLADA_DOM false CACHE BOOL "Enable the Collada plugin for OSG.")
+endif()
+
 set(OMEGA_COLLADA_INCLUDE_DIR CACHE INTERNAL "")
 set(OMEGA_COLLADA_LIBRARY CACHE INTERNAL "")
 set(OMEGA_OSG_DEPENDENCIES CACHE INTERNAL "")
@@ -25,8 +30,9 @@ else()
 endif()
 
 if(OMEGA_OSG_ENABLE_COLLADA_DOM)
+    include(${CMAKE_CURRENT_LIST_DIR}/UseMinizip.cmake)
     include(${CMAKE_CURRENT_LIST_DIR}/UseCollada.cmake)
-    set(OMEGA_OSG_DEPENDENCIES collada)
+    set(OMEGA_OSG_DEPENDENCIES collada minizip)
     set(OMEGA_COLLADA_INCLUDE_DIR ${COLLADA_INCLUDE_DIR})
     set(OMEGA_COLLADA_LIBRARY ${COLLADA_LIBRARY})
 endif()
@@ -61,6 +67,7 @@ else()
             -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
             -DCOLLADA_DYNAMIC_LIBRARY=${COLLADA_LIBRARY}
             -DCOLLADA_INCLUDE_DIR=${COLLADA_INCLUDE_DIR}
+            -DCOLLADA_MINIZIP_LIBRARY=${MINIZIP_LIBRARY}
             INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 		)
 endif()
