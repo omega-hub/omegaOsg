@@ -29,7 +29,7 @@ else()
     set(OSG_INSTALL_DIR ${OSG_BASE_DIR}/osg-install)
 endif()
 
-if(OMEGA_OSG_ENABLE_COLLADA_DOM)
+if(OMEGA_OSG_ENABLE_COLLADA_DOM OR MODULES_omegaOsgEarth)
     include(${CMAKE_CURRENT_LIST_DIR}/UseMinizip.cmake)
     include(${CMAKE_CURRENT_LIST_DIR}/UseCollada.cmake)
     set(OMEGA_OSG_DEPENDENCIES collada minizip)
@@ -41,7 +41,7 @@ if(WIN32)
 	ExternalProject_Add(
 		osg
 		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
-		CMAKE_ARGS 
+		CMAKE_ARGS
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
@@ -68,6 +68,7 @@ else()
             -DCOLLADA_DYNAMIC_LIBRARY=${COLLADA_LIBRARY}
             -DCOLLADA_INCLUDE_DIR=${COLLADA_INCLUDE_DIR}
             -DCOLLADA_MINIZIP_LIBRARY=${MINIZIP_LIBRARY}
+            -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
             INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 		)
 endif()
@@ -75,12 +76,11 @@ endif()
 set_target_properties(osg PROPERTIES FOLDER "3rdparty")
 
 if(OMEGA_USE_EXTERNAL_OSG)
-    set(OSG_INCLUDES 
-		${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include 
+    set(OSG_INCLUDES
+		${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include
 		${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
 else()
-	set(OSG_INCLUDES 
-		${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-install/include)
+	set(OSG_INCLUDES ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-install/include)
 endif()
 # NOTE: OSG_INCLUDES is set as a variable in the parent scope, so it can be accessed by other modules like cyclops.
 #set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)
@@ -111,7 +111,7 @@ if(OMEGA_OS_WIN)
 		#file(COPY ${OSG_BUILD_DIR}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG} PATTERN "*.dll")
 		#file(COPY ${EXTLIB_DIR}/bin/release/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
 	endif()
-	
+
 
 elseif(OMEGA_OS_LINUX)
 	# Linux
