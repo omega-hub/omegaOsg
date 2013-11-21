@@ -44,7 +44,8 @@ else()
 
     set(COLLADA_INCLUDE_DIR ${SOURCE_DIR}/dom/include CACHE INTERNAL "")
     set(COLLADA_LIBRARY  ${BINARY_DIR}/dom/src/1.4/libcollada14dom.${LIB_SUFFIX} CACHE INTERNAL "")
+
+    set_target_properties(collada PROPERTIES FOLDER "modules/omegaOsg")
 endif()
 
 
-set_target_properties(collada PROPERTIES FOLDER "modules/omegaOsg")
