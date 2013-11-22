@@ -1,3 +1,4 @@
+# XXX - Clean this one up
 if(WIN32)
 	# On windows we are lazy. Just download precompiled libs. 
 	# This is specific to Visual Studio 2010, Win32.
@@ -39,7 +40,7 @@ else()
         set(PATH_PREFIX linux64)
     endif()
  
-    set(MINIZIP_INCLUDE_DIR ${MINIZIP_DIR}/${PATH_PREFIX}/include CACHE INTERNAL "")
-    set(MINIZIP_LIBRARY ${MINIZIP_DIR}/lib/${PATH_PREFIX}/lib/libminizip.${LIB_SUFFIX} CACHE INTERNAL "")
-    set(MINIZIP_LIBRARY_PATH ${MINIZIP_DIR}/lib/${PATH_PREFIX}/lib CACHE INTERNAL "")
+    set(MINIZIP_INCLUDE_DIR ${MINIZIP_DIR}/include CACHE INTERNAL "")
+    set(MINIZIP_LIBRARY ${MINIZIP_DIR}/lib/${PATH_PREFIX}/libminizip.${LIB_SUFFIX} CACHE INTERNAL "")
+    set(MINIZIP_LIBRARY_PATH ${MINIZIP_DIR}/lib/${PATH_PREFIX} CACHE INTERNAL "")
 endif()
