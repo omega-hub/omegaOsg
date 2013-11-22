@@ -24,13 +24,14 @@ set(OSGWORKS_ARGS
 if(WIN32)
 	# The OSGWORKS_STATIC preprocessor definition tells osgBullet that
 	# we are using the static version of osgWorks.
+	message("OSG INCLUDE DIR: ${OSG_INCLUDES}")
   set(OSGWORKS_ARGS
     -DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
 	-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
 	-DOSGInstallType:STRING="Alternate Install Location"
 	-DOSGInstallLocation:PATH=${OSG_BINARY_DIR}
 	#osg
-  -DOSG_INCLUDE_DIR:PATH=${OSG_INSTALL_PATH}/include
+  -DOSG_INCLUDE_DIR:PATH=${OSG_INCLUDES}
 	-DOSG_LIBRARY:PATH=${osg_LIBRARY}
 	-DOSG_LIBRARY_DEBUG:PATH=${osg_LIBRARY_DEBUG}
 	#osgGA
