@@ -9,11 +9,16 @@ include_directories(${OSGBULLET_INCLUDES})
 
 add_subdirectory(src)
 add_subdirectory(apps/osgviewer)
+
+set(BULLET_BUILD_EXAMPLES false CACHE BOOL "set to true to build some omegalib/Bullet examples")
+
+if(BULLET_BUILD_EXAMPLES)
 add_subdirectory(apps/osgbCollision)
 add_subdirectory(apps/osgbBasicDemo)
 add_subdirectory(apps/osgbSphere)
 add_subdirectory(apps/osgbDice)
 add_subdirectory(apps/osgbSlider)
+endif()
 
 #if(OMEGA_USE_PORTHOLE)
 #	add_subdirectory(${CMAKE_SOURCE_DIR}/examples/portholeCustomDraw ${CMAKE_BINARY_DIR}/examples/portholeCustomDraw)

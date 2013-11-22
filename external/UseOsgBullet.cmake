@@ -6,7 +6,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/UseBullet.cmake)
 # ExternalProject_Add, because it would keep the double quotes, and we
 # do not want them. Passing it as a variable removes the dobule quotes.
 if(WIN32)
-        set(BulletInstallType "Alternate Install Location")
+        set(BulletInstallType "Source And Build Tree")
 else()
         set(BulletInstallType "Alternate Install Location")
 endif()
@@ -49,6 +49,7 @@ if(WIN32)
         # The OSGWORKS_STATIC preprocessor definition tells osgBullet that
         # we are using the static version of osgWorks.
         set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D\"OSGWORKS_STATIC\"")
+		message("bullet collition librRY PATH: ${BulletCollision_LIBRARY}")
         set(OSGBULLET_ARGS
                 #-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
                 #-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
