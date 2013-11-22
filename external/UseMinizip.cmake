@@ -8,7 +8,7 @@ if(WIN32)
 	
   if(NOT EXISTS ${EXTLIB_DIR})
   	message(STATUS "Unziping Minizip library")
-  	execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${EXTLIB_TGZ} WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+  	execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${EXTLIB_TGZ} WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/modules/omegaOsg)
   endif(NOT EXISTS ${EXTLIB_DIR})
 	
   set(MINIZIP_INCLUDE_DIR ${EXTLIB_DIR}/include CACHE INTERNAL "")

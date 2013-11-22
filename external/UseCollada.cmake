@@ -3,7 +3,7 @@ if(WIN32)
 	# This is specific to Visual Studio 2010, Win32.
   set(EXTLIB_NAME collada)
   set(EXTLIB_TGZ ${CMAKE_CURRENT_LIST_DIR}/collada_dom-2.3.1-win32.tar.gz)
-  set(EXTLIB_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/external/collada_dom-2.3.1-win32)
+  set(EXTLIB_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/collada_dom-2.3.1-win32)
   #	
   if(NOT EXISTS ${EXTLIB_DIR})
   	message(STATUS "Unpackiing collada library")
