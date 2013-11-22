@@ -1,6 +1,16 @@
 include(ExternalProject)
 
 set(OMEGA_USE_EXTERNAL_OSG false CACHE BOOL "Enable to use an external osg build instead of the built-in one.")
+if(_OMEGA_OSG_ENABLE_COLLADA_DOM)
+    set(OMEGA_OSG_ENABLE_COLLADA_DOM true CACHE BOOL "Enable the Collada plugin for OSG.")
+else()
+    set(OMEGA_OSG_ENABLE_COLLADA_DOM false CACHE BOOL "Enable the Collada plugin for OSG.")
+endif()
+
+set(OMEGA_COLLADA_INCLUDE_DIR CACHE INTERNAL "")
+set(OMEGA_COLLADA_LIBRARY CACHE INTERNAL "")
+set(OMEGA_OSG_DEPENDENCIES CACHE INTERNAL "")
+
 if(OMEGA_USE_EXTERNAL_OSG)
 	# When using external osg builds, for now you need to make sure manually the OSG binary
 	# include dir is in the compiler include search, paths otherwise osgWorks won't compile.
@@ -17,6 +27,14 @@ else()
     set(OSG_BINARY_DIR ${OSG_BASE_DIR}/osg-build)
     set(OSG_SOURCE_DIR ${OSG_BASE_DIR}/osg)
     set(OSG_INSTALL_DIR ${OSG_BASE_DIR}/osg-install)
+endif()
+
+if(OMEGA_OSG_ENABLE_COLLADA_DOM OR MODULES_omegaOsgEarth)
+    include(${CMAKE_CURRENT_LIST_DIR}/UseMinizip.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/UseCollada.cmake)
+    set(OMEGA_OSG_DEPENDENCIES collada minizip)
+    set(OMEGA_COLLADA_INCLUDE_DIR ${COLLADA_INCLUDE_DIR})
+    set(OMEGA_COLLADA_LIBRARY ${COLLADA_LIBRARY})
 endif()
 
 if(WIN32)
@@ -36,8 +54,9 @@ if(WIN32)
 else()
 	ExternalProject_Add(
 		osg
-		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
-		CMAKE_ARGS
+        DEPENDS ${OMEGA_OSG_DEPENDENCIES}
+        URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
+		CMAKE_ARGS 
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
@@ -46,6 +65,9 @@ else()
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
             -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
+            -DCOLLADA_DYNAMIC_LIBRARY=${COLLADA_LIBRARY}
+            -DCOLLADA_INCLUDE_DIR=${COLLADA_INCLUDE_DIR}
+            -DCOLLADA_MINIZIP_LIBRARY=${MINIZIP_LIBRARY}
             -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
             INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 		)

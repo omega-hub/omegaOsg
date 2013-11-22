@@ -1,0 +1,30 @@
+diff -Naur collada-dom-2.3/CMakeLists.txt collada-dom-2.3-new/core/CMakeLists.txt
+--- collada-dom-2.3/CMakeLists.txt	2011-03-21 18:31:02.000000000 -0500
++++ collada-dom-2.3-new/core/CMakeLists.txt	2013-11-20 00:58:00.000000000 -0600
+@@ -162,13 +162,7 @@
+   message(FATAL_ERROR "could not find zlib")
+ endif()
+ 
+-pkg_check_modules(minizip minizip)
+-if(minizip_FOUND)
+-  set(MINIZIP_INCLUDE_DIR ${minizip_INCLUDE_DIRS})
+-else()
+-  add_subdirectory(dom/external-libs/minizip-1.1)
+-  set(MINIZIP_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dom/external-libs/minizip-1.1 ${ZLIB_INCLUDE_DIR})
+-endif()
++set(MINIZIP_INCLUDE_DIR ${MINIZIP_INCLUDE_DIR} ${ZLIB_INCLUDE_DIR})
+ 
+ pkg_check_modules(libpcrecpp libpcrecpp)
+ if( libpcrecpp_FOUND )
+diff -Naur collada-dom-2.3/dom/CMakeLists.txt collada-dom-2.3-new/core/dom/CMakeLists.txt
+--- collada-dom-2.3/dom/CMakeLists.txt	2011-02-21 21:54:41.000000000 -0600
++++ collada-dom-2.3-new/core/dom/CMakeLists.txt	2013-11-20 14:16:30.000000000 -0600
+@@ -7,7 +7,7 @@
+ file(GLOB stderrplugin_files ${CMAKE_CURRENT_SOURCE_DIR}/src/modules/stdErrPlugin/*.cpp)
+ 
+ set(COLLADA_BASE_SOURCES ${dae_files} ${libxmlplugin_files} ${stddatabase_files} ${stderrplugin_files})
+-set(COLLADA_LIBS minizip ${libpcrecpp_LIBRARIES} ${ZLIB_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
++set(COLLADA_LIBS ${MINIZIP_LIBRARY} ${LIBXML2_LIBRARIES} ${libpcrecpp_LIBRARIES} ${ZLIB_LIBRARIES} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY})
+ set(COLLADA_COMPILE_FLAGS "${libpcrecpp_CFLAGS_OTHERS} ${EXTRA_COMPILE_FLAGS} ${Boost_CFLAGS} -DDOM_INCLUDE_LIBXML")
+ 
+ if( OPT_COLLADA15 )
