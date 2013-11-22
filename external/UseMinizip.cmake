@@ -3,8 +3,8 @@ if(WIN32)
 	# On windows we are lazy. Just download precompiled libs. 
 	# This is specific to Visual Studio 2010, Win32.
   set(EXTLIB_NAME minizip)
-  set(EXTLIB_TGZ ${CMAKE_BINARY_DIR}/${EXTLIB_NAME}.tar.gz)
-  set(EXTLIB_DIR ${CMAKE_BINARY_DIR}/minizip/)
+  set(EXTLIB_TGZ ${CMAKE_CURRENT_LIST_DIR}/${EXTLIB_NAME}.tar.gz)
+  set(EXTLIB_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/external/minizip)
 	
   if(NOT EXISTS ${EXTLIB_DIR})
   	message(STATUS "Unziping Minizip library")
