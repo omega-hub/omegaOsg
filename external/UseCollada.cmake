@@ -13,8 +13,8 @@ if(WIN32)
   set(COLLADA_INCLUDE_DIR ${EXTLIB_DIR}/include CACHE INTERNAL "")
   set(COLLADA_LIBRARY  ${EXTLIB_DIR}/lib/collada15dom2-vc80-mt.lib CACHE INTERNAL "")
 	
-	# create phony target gdal
-  add_custom_target(gdal)
+	# create phony target collada
+  add_custom_target(collada)
 	# Copy the dlls into the target directories
   file(COPY ${EXTLIB_DIR}/lib/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG} PATTERN "*.dll")
   file(COPY ${EXTLIB_DIR}/lib/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
