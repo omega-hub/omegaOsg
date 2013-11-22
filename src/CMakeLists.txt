@@ -1,6 +1,7 @@
 add_definitions( -D_CRT_SECURE_NO_WARNINGS -DOOSG_EXPORTING)
 
 set( srcs 
+		OsgDebugOverlay.cpp
 		OsgModule.cpp
 		OsgRenderPass.cpp
 		OsgSceneObject.cpp
@@ -12,6 +13,7 @@ SET( headers
 		# omega
 		../omegaOsg/oosgbase.h
 		../omegaOsg/OsgModule.h
+		../omegaOsg/OsgDebugOverlay.h
 		../omegaOsg/OsgRenderPass.h
 		../omegaOsg/OsgSceneObject.h
 		../omegaOsg/SceneView.h

@@ -53,6 +53,7 @@ namespace omegaOsg
 {
     using namespace omega;
     class OsgModule;
+    class OsgDebugOverlay;
 
     ////////////////////////////////////////////////////////////////////////////
     class OOSG_API OsgRenderPass: public RenderPass
@@ -97,6 +98,8 @@ namespace omegaOsg
         Ref<Stat> myTriangleCountStat;
         Ref<Stat> myCullTimeStat;
         Ref<Stat> myDrawTimeStat;
+
+        OsgDebugOverlay* myDebugOverlay;
     };
 };
 #endif

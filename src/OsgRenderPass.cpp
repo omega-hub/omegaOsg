@@ -37,6 +37,7 @@
 #include "omegaOsg/SceneView.h"
 #include "omegaOsg/OsgRenderPass.h"
 #include "omegaOsg/OsgModule.h"
+#include "omegaOsg/OsgDebugOverlay.h"
 
 #include <osgViewer/Renderer>
 
@@ -63,12 +64,16 @@ OsgRenderPass::OsgRenderPass(Renderer* client, const String& name): RenderPass(c
         myTriangleCountStat(NULL),
         myCullTimeStat(NULL),
         myDrawTimeStat(NULL)
-{}
+{
+    myDebugOverlay = new OsgDebugOverlay();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 OsgRenderPass::~OsgRenderPass()
 {
     mySceneView = NULL;
+    myDebugOverlay->unref();
+    myDebugOverlay = NULL;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +214,14 @@ void OsgRenderPass::render(Renderer* client, const DrawContext& context)
         }
 
         myModule->getDatabasePager()->signalEndFrame();
-
+    }
+    else if(context.task == DrawContext::OverlayDrawTask)
+    {
+        if(myModule->myDisplayDebugOverlay)
+        {
+            myDebugOverlay->update(mySceneView);
+            myDebugOverlay->draw(context);
+        }
     }
     //sInitLock.unlock();
 }

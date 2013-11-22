@@ -130,7 +130,8 @@ OsgModule* OsgModule::instance()
 OsgModule::OsgModule():
     EngineModule("OsgModule"),
         myDepthPartitionMode(OsgRenderPass::DepthPartitionOff),
-        myDepthPartitionZ(1000)
+        myDepthPartitionZ(1000),
+        myDisplayDebugOverlay(false)
 {
     mysInstance = this;
 
@@ -222,6 +223,11 @@ bool OsgModule::handleCommand(const String& command)
         omsg("OsgModule");
         omsg("\t autonearfar [on|off] - (experimental) toggle auto near far Z on or off");
         omsg("\t depthpart [on <value>|off|near|far] - set the depth partition mode and Z threshold");
+        omsg("\t rs - toggle the rendering statistics overlay");
+    }
+    else if(args[0] == "rs")
+    {
+        myDisplayDebugOverlay = !myDisplayDebugOverlay;
     }
     else if(args[0] == "autonearfar")
     {

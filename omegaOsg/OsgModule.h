@@ -66,6 +66,7 @@ namespace omegaOsg
     ///////////////////////////////////////////////////////////////////////////
     class OOSG_API OsgModule: public EngineModule
     {
+    friend class OsgRenderPass;
     public:
         static OsgModule* instance();
         
@@ -112,6 +113,8 @@ namespace omegaOsg
         static OsgModule* mysInstance;
 
         bool myAutoNearFar;
+
+        bool myDisplayDebugOverlay;
 
         OsgRenderPass::DepthPartitionMode myDepthPartitionMode;
         float myDepthPartitionZ;
