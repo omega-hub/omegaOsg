@@ -29,7 +29,7 @@ else()
     set(OSG_INSTALL_DIR ${OSG_BASE_DIR}/osg-install)
 endif()
 
-if(OMEGA_OSG_ENABLE_COLLADA_DOM OR MODULES_omegaOsgEarth)
+if(OMEGA_OSG_ENABLE_COLLADA_DOM)
     include(${CMAKE_CURRENT_LIST_DIR}/UseMinizip.cmake)
     include(${CMAKE_CURRENT_LIST_DIR}/UseCollada.cmake)
     set(OMEGA_OSG_DEPENDENCIES collada minizip)
