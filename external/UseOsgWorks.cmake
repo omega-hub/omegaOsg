@@ -2,6 +2,10 @@ set(OSGWORKS_GENERATOR ${CMAKE_GENERATOR})
 
 set(OSGWorks_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
 
+set(OSG_INSTALL_TYPE "Alternate Install Location")
+
+message("OSG_INSTALL_DIR: ${OSG_INSTALL_DIR}")
+
 set(OSGWORKS_ARGS
   -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
   -DCMAKE_LINKER_FLAGS:STRING=${CMAKE_LINKER_FLAGS}
@@ -11,10 +15,23 @@ set(OSGWORKS_ARGS
   -DWORKS_BUILD_APPS=OFF
   -DWORKS_INSTALL_DATA=OFF
   #osg
-  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}
+  -DOSGInstallType:STRING=${OSG_INSTALL_TYPE}
+  -DOSGInstallLocation:PATH=${OSG_INSTALL_DIR}
   #osgWorks
   -DOSGWORKS_BUILD_APPS:BOOL=OFF
 )
+
+if(OMEGA_ARCH_32)
+	set(OSGWORKS_ARGS
+		  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}/lib
+		${OSGWORKS_ARGS}
+	  )
+else()
+	set(OSGWORKS_ARGS
+		  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}/lib64
+		${OSGWORKS_ARGS}
+	  )
+endif()
 
 # NOTE: On windows, we explicitly list all the required bullet and osg libraries,
 # since using the library finding modules does not work correctly in debug builds.
