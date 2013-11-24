@@ -35,9 +35,6 @@ set(OSGBULLET_ARGS
   # This means we will need to take this into accout when building for 32 bit linux.
   #osgWorks
   -DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/lib
-  #----------
-  #OSG_DIR needs to avoid OSGWORKS_LIB_SUFFIX on osx.
-  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}
 )
 
 # NOTE: On windows, we explicitly list all the required bullet and osg libraries,
@@ -79,6 +76,7 @@ if(WIN32)
                 -DOSG_INCLUDE_DIR:PATH=${OSG_INCLUDES}
                 -DOSG_LIBRARY:PATH=${osg_LIBRARY}
                 -DOSG_LIBRARY_DEBUG:PATH=${osg_LIBRARY_DEBUG}
+		-DOSG_DIR:PATH=${OSG_INSTALL_DIR}
                 #osgGA
                 -DOSGGA_INCLUDE_DIR:PATH=${OSG_INCLUDES}
                 -DOSGGA_LIBRARY:PATH=${osgGA_LIBRARY}
@@ -122,6 +120,8 @@ elseif(APPLE)
                 -DOSGInstallType:STRING=${OsgInstallType}
                 -DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
                 -DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
+		#OSG_DIR needs to avoid OSGWORKS_LIB_SUFFIX on osx.
+		-DOSG_DIR:PATH=${OSG_INSTALL_DIR}
                 #Bullet
                 -DBulletInstallType:STRING=${BulletInstallType}
                 -DBulletSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet
@@ -139,6 +139,7 @@ else()
                 -DOSGInstallType:STRING=${OsgInstallType}
                 -DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
                 -DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
+		-DOSG_DIR:PATH=${OSG_INSTALL_DIR}/${OSGWORKS_LIB_SUFFIX}
                 #Bullet
                 -DBulletInstallType:STRING=${BulletInstallType}
                 -DBulletSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet
