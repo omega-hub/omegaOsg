@@ -36,7 +36,8 @@ set(OSGBULLET_ARGS
   #osgWorks
   -DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/lib
   #----------
-  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}/${OSGWORKS_LIB_SUFFIX}
+  #OSG_DIR needs to avoid OSGWORKS_LIB_SUFFIX on osx.
+  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}
 )
 
 # NOTE: On windows, we explicitly list all the required bullet and osg libraries,
