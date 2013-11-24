@@ -144,7 +144,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/UseOsgWorks.cmake)
 # Add osgWorks to openscenegraph includes and libraries (this simplified inclusion in other projects.
 # we consider osg and osgWorks as a single package.
 set(OSG_INCLUDES ${OSG_INCLUDES} ${OSGWORKS_INCLUDES} CACHE INTERNAL "")
-set(OSG_LIBS ${OSG_LIBS} ${OSGWORKS_LIBS})
+set(OSG_LIBS ${OSG_LIBS} ${OSGWORKS_LIBS} CACHE INTERNAL "")
 set(OSG_INSTALL_DIR ${OSG_INSTALL_DIR} CACHE INTERNAL "")
 
 if(${OMEGA_INSTALL_DEVLIBS})

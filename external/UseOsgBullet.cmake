@@ -11,8 +11,7 @@ else()
         set(BulletInstallType "Alternate Install Location")
 endif()
 
-
-if(WIN32 OR APPLE)
+if(OMEGA_ARCH_32)
   set(OSGWORKS_LIB_SUFFIX lib)
 else()
   set(OSGWORKS_LIB_SUFFIX lib64)
@@ -35,9 +34,9 @@ set(OSGBULLET_ARGS
   # NOTE: on linux, the osgWorks config files go in the lib or lib64 directory depending on the bitness.
   # This means we will need to take this into accout when building for 32 bit linux.
   #osgWorks
-  -DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/${OSGWORKS_LIB_SUFFIX}
+  -DosgWorks_DIR:PATH=${CMAKE_BINARY_DIR}/modules/omegaOsg/osgWorks-prefix/src/osgWorks-build/lib
   #----------
-  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}
+  -DOSG_DIR:PATH=${OSG_INSTALL_DIR}/${OSGWORKS_LIB_SUFFIX}
 )
 
 # NOTE: On windows, we explicitly list all the required bullet and osg libraries,
