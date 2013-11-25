@@ -38,8 +38,7 @@
 #include "omega/RenderPass.h"
 
 #include "oosgbase.h"
-//#include "omega/Engine.h"
-//#include "omega/Application.h"
+#include<osg/Referenced>
 
 
 class SceneView;
@@ -56,9 +55,17 @@ namespace omegaOsg
     class OsgDebugOverlay;
 
     ////////////////////////////////////////////////////////////////////////////
-    class OOSG_API OsgRenderPass: public RenderPass
+    //! Stores user data that will be passed along with the camera to osg nodes
+    //! during cull traversal. This can be used by omegalib osg nodes to access
+    //! the current omegalib draw context and other information about the 
+    //! rendering settings
+    struct OsgDrawInformation: public osg::Referenced
     {
-    public:
+        OsgDrawInformation():
+            context(NULL), 
+            depthPartitionMode(DepthPartitionOff)
+            {}
+
         //! The mode to use for scene depth partitioning
         enum DepthPartitionMode
         {
@@ -72,6 +79,13 @@ namespace omegaOsg
             DepthPartitionNearOnly
         };
 
+        const DrawContext* context;
+        DepthPartitionMode depthPartitionMode;
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    class OOSG_API OsgRenderPass: public RenderPass
+    {
     public:
         OsgRenderPass(Renderer* client, const String& name);
         static RenderPass* createInstance(Renderer* client) { return new OsgRenderPass(client, "OsgRenderPass"); }
@@ -85,12 +99,14 @@ namespace omegaOsg
         void compileGLOjects() { myCompileGLOBjects = true; }
 
     private:
-        void drawView(SceneView* view, const DrawContext& context, bool getstats, DepthPartitionMode dpm);
+        void drawView(SceneView* view, const DrawContext& context, bool getstats, OsgDrawInformation::DepthPartitionMode dpm);
 
     private:
         OsgModule* myModule;
         Ref<SceneView> mySceneView;
         Ref<SceneView> myFarSceneView;
+
+        Ref<OsgDrawInformation> myDrawInfo;
 
         bool myCompileGLOBjects;
         

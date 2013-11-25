@@ -129,7 +129,7 @@ OsgModule* OsgModule::instance()
 ///////////////////////////////////////////////////////////////////////////////
 OsgModule::OsgModule():
     EngineModule("OsgModule"),
-        myDepthPartitionMode(OsgRenderPass::DepthPartitionOff),
+        myDepthPartitionMode(OsgDrawInformation::DepthPartitionOff),
         myDepthPartitionZ(1000),
         myDisplayDebugOverlay(false)
 {
@@ -247,20 +247,20 @@ bool OsgModule::handleCommand(const String& command)
             if(args[1] == "on" && args.size() > 2)
             {
                 float z = boost::lexical_cast<float>(args[2]);
-                myDepthPartitionMode = OsgRenderPass::DepthPartitionOn;
+                myDepthPartitionMode = OsgDrawInformation::DepthPartitionOn;
                 myDepthPartitionZ = z;
             }
             else if(args[1] == "off")
             {
-                myDepthPartitionMode = OsgRenderPass::DepthPartitionOff;
+                myDepthPartitionMode = OsgDrawInformation::DepthPartitionOff;
             }
             else if(args[1] == "near")
             {
-                myDepthPartitionMode = OsgRenderPass::DepthPartitionNearOnly;
+                myDepthPartitionMode = OsgDrawInformation::DepthPartitionNearOnly;
             }
             else if(args[1] == "far")
             {
-                myDepthPartitionMode = OsgRenderPass::DepthPartitionFarOnly;
+                myDepthPartitionMode = OsgDrawInformation::DepthPartitionFarOnly;
             }
             else
             {

@@ -104,8 +104,8 @@ namespace omegaOsg
         void setAutoNearFar(bool value) { myAutoNearFar = value; }
         bool getAutoNearFar() { return myAutoNearFar; }
 
-        void setDepthPartitionMode(OsgRenderPass::DepthPartitionMode mode) { myDepthPartitionMode = mode; }
-        OsgRenderPass::DepthPartitionMode getDepthPartitionMode() { return myDepthPartitionMode; }
+        void setDepthPartitionMode(OsgDrawInformation::DepthPartitionMode mode) { myDepthPartitionMode = mode; }
+        OsgDrawInformation::DepthPartitionMode getDepthPartitionMode() { return myDepthPartitionMode; }
         void setDepthPartitionZ(float value) { myDepthPartitionZ = value; }
         float getDepthPartitionZ() { return myDepthPartitionZ; }
 
@@ -116,7 +116,7 @@ namespace omegaOsg
 
         bool myDisplayDebugOverlay;
 
-        OsgRenderPass::DepthPartitionMode myDepthPartitionMode;
+        OsgDrawInformation::DepthPartitionMode myDepthPartitionMode;
         float myDepthPartitionZ;
 
         //OsgSceneObject* myRootSceneObject;

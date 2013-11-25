@@ -66,6 +66,7 @@ OsgRenderPass::OsgRenderPass(Renderer* client, const String& name): RenderPass(c
         myDrawTimeStat(NULL)
 {
     myDebugOverlay = new OsgDebugOverlay();
+    myDrawInfo = new OsgDrawInformation();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,7 +107,7 @@ void OsgRenderPass::initialize()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool getstats, DepthPartitionMode dpm)
+void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool getstats, OsgDrawInformation::DepthPartitionMode dpm)
 {
     // Bush the current transform state so we can restore it once osg drawing
     // is done.
@@ -119,13 +120,18 @@ void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool g
 
     osg::Camera* cam = view->getCamera();
 
+    // Pass draw information to the camera
+    myDrawInfo->context = &context;
+    myDrawInfo->depthPartitionMode = dpm;
+    cam->setUserData(myDrawInfo);
+
     cam->setViewport( context.viewport.x(), context.viewport.y(), context.viewport.width(), context.viewport.height() );
     cam->setProjectionMatrix(buildOsgMatrix(context.projection.matrix()));
     cam->setViewMatrix(buildOsgMatrix(context.modelview.matrix()));
     mySceneView->setAutoNearFar(myModule->getAutoNearFar());
 
     // Adjust camera parameters to take depth partitioning into account
-    if(dpm == DepthPartitionNearOnly)
+    if(dpm == OsgDrawInformation::DepthPartitionNearOnly)
     {
         double left, right, bottom, top, zNear, zFar;
         cam->getProjectionMatrixAsFrustum(left, right, bottom, top, zNear, zFar);
@@ -134,7 +140,7 @@ void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool g
         cam->setProjectionMatrixAsFrustum(left, right, bottom, top, zNear, myModule->getDepthPartitionZ());
         cam->setClearMask(GL_DEPTH_BUFFER_BIT);
     }
-    else if(dpm == DepthPartitionFarOnly)
+    else if(dpm == OsgDrawInformation::DepthPartitionFarOnly)
     {
         double left, right, bottom, top, zNear, zFar;
         cam->getProjectionMatrixAsFrustum(left, right, bottom, top, zNear, zFar);
@@ -195,21 +201,21 @@ void OsgRenderPass::render(Renderer* client, const DrawContext& context)
 
         myModule->getDatabasePager()->signalBeginFrame(myModule->getFrameStamp());
 
-        DepthPartitionMode dpm = myModule->getDepthPartitionMode();
-        if(dpm == DepthPartitionOff)
+        OsgDrawInformation::DepthPartitionMode dpm = myModule->getDepthPartitionMode();
+        if(dpm == OsgDrawInformation::DepthPartitionOff)
         {
-            drawView(mySceneView, context, getstats, DepthPartitionOff);
+            drawView(mySceneView, context, getstats, OsgDrawInformation::DepthPartitionOff);
         }
         else
         {
             // When depth partitioning is on, we draw the scene twice using the two embedded SceneView instances.
-            if(dpm == DepthPartitionOn || dpm == DepthPartitionFarOnly)
+            if(dpm == OsgDrawInformation::DepthPartitionOn || dpm == OsgDrawInformation::DepthPartitionFarOnly)
             {
-                drawView(mySceneView, context, getstats, DepthPartitionFarOnly);
+                drawView(mySceneView, context, getstats, OsgDrawInformation::DepthPartitionFarOnly);
             }
-            if(dpm == DepthPartitionOn || dpm == DepthPartitionNearOnly)
+            if(dpm == OsgDrawInformation::DepthPartitionOn || dpm == OsgDrawInformation::DepthPartitionNearOnly)
             {
-                drawView(mySceneView, context, getstats, DepthPartitionNearOnly);
+                drawView(mySceneView, context, getstats, OsgDrawInformation::DepthPartitionNearOnly);
             }
         }
 
