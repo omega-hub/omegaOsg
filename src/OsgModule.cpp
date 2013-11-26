@@ -146,10 +146,20 @@ OsgModule::OsgModule():
     myUpdateVisitor = new osgUtil::UpdateVisitor;
     myUpdateVisitor->setFrameStamp( myFrameStamp );
     myUpdateVisitor->setDatabaseRequestHandler(myDatabasePager);
+    
+    // OsgDB: register the default path of plugin files
+    // Database should always be a subdir of the current executable directory
+    String execPath = ogetexecpath();
+    String execName;
+    StringUtils::splitFilename(execPath, execName, execPath);
+    osgDB::Registry* reg = osgDB::Registry::instance();
+    String libPath = execPath + String("/osg/osg/osgPlugins-3.3.0:") + execPath + String("/osg");
+    ofmsg("OSG Plugin Path(s): %1%", %libPath);
+    reg->setLibraryFilePathList(libPath);
 
-    osgDB::Registry::instance()->addReaderWriter(new ReaderFreeImage());
+    reg->addReaderWriter(new ReaderFreeImage());
 #ifdef OMEGAOSG_USE_FBX
-    osgDB::Registry::instance()->addReaderWriter(new ReaderWriterFBX());
+    reg->addReaderWriter(new ReaderWriterFBX());
 #endif
     //osgDB::Registry::instance()->addReaderWriter(new ReaderWriterIV());
 }
