@@ -174,7 +174,10 @@ void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool g
     myDrawTimeStat->stopTiming();
 
     // Collect triangle count statistics (every 10 frames)
-    myTriangleCountStat->addSample(view->getTriangleCount());
+    // NOTE: The following line has a major performance impact on applications.
+    // It should be called sparingly, and only when user explicitly wants
+    // statistics on triangle counts.
+    //myTriangleCountStat->addSample(view->getTriangleCount());
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
