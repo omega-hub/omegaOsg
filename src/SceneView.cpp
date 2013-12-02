@@ -169,7 +169,10 @@ void SceneView::compileGLObjects()
     //py->queueCommand("print('>>>>>>> compiling GL objects')");
     //if (_camera.valid() && _initVisitor.valid())
     {
-        omicron::Ref<GLObjectsVisitor> dlv = new GLObjectsVisitor();
+        omicron::Ref<GLObjectsVisitor> dlv = new GLObjectsVisitor(
+            GLObjectsVisitor::SWITCH_OFF_DISPLAY_LISTS |
+            GLObjectsVisitor::SWITCH_ON_VERTEX_BUFFER_OBJECTS |
+            GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
         dlv->reset();
         dlv->setDatabaseRequestHandler(_databasePager);
         dlv->setFrameStamp(_frameStamp.get());
