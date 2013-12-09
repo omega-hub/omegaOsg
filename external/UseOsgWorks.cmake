@@ -4,7 +4,7 @@ set(OSGWorks_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
 
 set(OSG_INSTALL_TYPE "Alternate Install Location")
 
-message("OSG_INSTALL_DIR: ${OSG_INSTALL_DIR}")
+#message("OSG_INSTALL_DIR: ${OSG_INSTALL_DIR}")
 
 set(OSGWORKS_ARGS
   -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
@@ -42,7 +42,7 @@ endif()
 if(WIN32)
 	# The OSGWORKS_STATIC preprocessor definition tells osgBullet that
 	# we are using the static version of osgWorks.
-	message("OSG INCLUDE DIR: ${OSG_INCLUDES}")
+	#message("OSG INCLUDE DIR: ${OSG_INCLUDES}")
   set(OSGWORKS_ARGS
     -DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
 	-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"

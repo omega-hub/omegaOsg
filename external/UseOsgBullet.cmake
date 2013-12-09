@@ -46,7 +46,6 @@ if(WIN32)
         # The OSGWORKS_STATIC preprocessor definition tells osgBullet that
         # we are using the static version of osgWorks.
         set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D\"OSGWORKS_STATIC\"")
-		message("bullet collition librRY PATH: ${BulletCollision_LIBRARY}")
         set(OSGBULLET_ARGS
                 #-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
                 #-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
