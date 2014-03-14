@@ -10,6 +10,7 @@ endif()
 set(OMEGA_COLLADA_INCLUDE_DIR CACHE INTERNAL "")
 set(OMEGA_COLLADA_LIBRARY CACHE INTERNAL "")
 set(OMEGA_OSG_DEPENDENCIES CACHE INTERNAL "")
+set(OSG_LIBS "")
 
 if(OMEGA_USE_EXTERNAL_OSG)
 	# When using external osg builds, for now you need to make sure manually the OSG binary
@@ -152,8 +153,8 @@ elseif(OMEGA_OS_LINUX)
 else()
 	# OSX
 	foreach( C ${OSG_COMPONENTS} )
-		set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}.dylib)
-		set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}d.dylib)
+		set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}.dylib)
+		set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}d.dylib)
 		set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
 	endforeach()
 	# file(COPY ${EXTLIB_DIR}/lib/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
