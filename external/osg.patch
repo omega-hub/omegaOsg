@@ -1,0 +1,23 @@
+diff -Naur /home/Febret/work/omegalib/build/modules/omegaOsg/osg-prefix/src/osg/include/osgUtil/RenderStage osg/include/osgUtil/RenderStage
+--- /home/Febret/work/omegalib/build/modules/omegaOsg/osg-prefix/src/osg/include/osgUtil/RenderStage	2014-03-20 17:28:50.000000000 -0500
++++ osg/include/osgUtil/RenderStage	2014-03-20 21:33:24.238199600 -0500
+@@ -258,12 +258,17 @@
+            * for all graphics contexts. */
+         virtual void releaseGLObjects(osg::State* state= 0) const;
+ 
++		// >>> OMEGALIB CHANGE
++        typedef std::pair< int , osg::ref_ptr<RenderStage> > RenderStageOrderPair;
++        typedef std::list< RenderStageOrderPair > RenderStageList;
++		
++		const RenderStageList& getPreRenderList() { return _preRenderList; }
++		const RenderStageList& getPostRenderList() { return _postRenderList; }
++		// <<< OMEGALIB CHANGE
+ protected:
+ 
+         virtual ~RenderStage();
+ 
+-        typedef std::pair< int , osg::ref_ptr<RenderStage> > RenderStageOrderPair;
+-        typedef std::list< RenderStageOrderPair > RenderStageList;
+         typedef std::vector< osg::ref_ptr<osg::Camera> > Cameras;
+ 
+         bool                                _stageDrawnThisFrame;

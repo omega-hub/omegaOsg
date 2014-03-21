@@ -8,6 +8,12 @@ set(BULLET_GENERATOR ${CMAKE_GENERATOR})
 
 set(BULLET_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
 
+if(OMEGA_TOOL_VS12)
+    set(BULLET_PATCH_COMMAND "patch -p1 < ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-vs2013.patch")
+else()
+    set(BULLET_PATCH_COMMAND "")
+endif()
+
 ExternalProject_Add(
 	bullet
 	URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-2.81-rev2613.tar.gz
@@ -25,6 +31,7 @@ ExternalProject_Add(
     -DPKGCONFIG_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install/lib/pckconfig
     -DINCLUDE_INSTALL_DIR=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install/include
     -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install
+    PATCH_COMMAND ${BULLET_PATCH_COMMAND}
   #INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 )
 

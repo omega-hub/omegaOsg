@@ -1,6 +1,10 @@
 #ifndef FBXRANIMATION_H
 #define FBXRANIMATION_H
 
+// The following is a hack to make the FBX header files compile correctly under Visual Studio 2012 and Visual Studio 2013
+#if _MSC_VER >= 1700
+	#define FBX_DLL_MSC_VER 1600
+#endif
 #include <fbxsdk.h>
 #include <osgDB/ReaderWriter>
 #include <osgAnimation/BasicAnimationManager>

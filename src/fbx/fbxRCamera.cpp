@@ -7,8 +7,6 @@
 #pragma warning( disable : 4505 )
 #pragma warning( default : 4996 )
 #endif
-#include <fbxsdk.h>
-
 #include "fbxReader.h"
 
 osgDB::ReaderWriter::ReadResult OsgFbxReader::readFbxCamera(FbxNode* pNode)
