@@ -8,19 +8,19 @@ set(BULLET_GENERATOR ${CMAKE_GENERATOR})
 
 set(BULLET_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fPIC)
 
-if(OMEGA_TOOL_VS12)
-    set(BULLET_PATCH_COMMAND "patch -p1 < ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-vs2013.patch")
-else()
-    set(BULLET_PATCH_COMMAND "")
-endif()
+# if(OMEGA_TOOL_VS12)
+    # set(BULLET_PATCH_COMMAND "patch -p1 < ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-vs2013.patch")
+# else()
+    # set(BULLET_PATCH_COMMAND "")
+# endif()
 
 ExternalProject_Add(
 	bullet
 	URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/bullet-2.81-rev2613.tar.gz
 	CMAKE_GENERATOR ${BULLET_GENERATOR}
 	CMAKE_ARGS
-		-DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
-    -DCMAKE_CXX_FLAGS:STRING=${BULLET_CXX_FLAGS}
+        -DCMAKE_SHARED_LINKER_FLAGS:STRING=${CMAKE_SHARED_LINKER_FLAGS}
+        -DCMAKE_CXX_FLAGS:STRING=${BULLET_CXX_FLAGS}
 		-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
 		-DBUILD_AMD_OPENCL_DEMOS=OFF
 		-DBUILD_CPU_DEMOS=OFF
@@ -28,10 +28,11 @@ ExternalProject_Add(
 		# NOTE: On Windows, windows are not set to be installed by default.
 		# This flag makes sure they get installed.
 		-DINSTALL_LIBS=ON
+        -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
     -DPKGCONFIG_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install/lib/pckconfig
     -DINCLUDE_INSTALL_DIR=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install/include
     -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet-install
-    PATCH_COMMAND ${BULLET_PATCH_COMMAND}
+    #PATCH_COMMAND ${BULLET_PATCH_COMMAND}
   #INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
 )
 

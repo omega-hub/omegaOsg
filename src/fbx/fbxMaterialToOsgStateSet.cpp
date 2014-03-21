@@ -1,3 +1,4 @@
+#include "fbxReader.h"
 #include "fbxMaterialToOsgStateSet.h"
 #include <sstream>
 #include <osgDB/ReadFile>

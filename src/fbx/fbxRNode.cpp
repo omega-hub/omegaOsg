@@ -2,6 +2,8 @@
 #include <memory>
 #include <sstream>
 
+#include "fbxReader.h"
+
 #include <osg/io_utils>
 #include <osg/Notify>
 #include <osg/MatrixTransform>

@@ -25,12 +25,7 @@
 #include <osgDB/FileNameUtils>
 #include <osgDB/ReaderWriter>
 #include <osgDB/ExternalFileWriter>
-
-#if defined(_MSC_VER)
-#pragma warning( disable : 4505 )
-#pragma warning( default : 4996 )
-#endif
-#include <fbxsdk.h>
+#include "fbxReader.h"
 
 struct Triangle
 {

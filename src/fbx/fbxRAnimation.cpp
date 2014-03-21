@@ -5,11 +5,6 @@
 #include <osgAnimation/Channel>
 #include <osgAnimation/Sampler>
 
-#if defined(_MSC_VER)
-    #pragma warning( disable : 4505 )
-    #pragma warning( default : 4996 )
-#endif
-#include <fbxsdk.h>
 #include "fbxReader.h"
 
 osg::Quat makeQuat(const FbxDouble3&, EFbxRotationOrder);
