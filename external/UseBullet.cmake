@@ -19,6 +19,7 @@ ExternalProject_Add(
 		-DBUILD_AMD_OPENCL_DEMOS=OFF
 		-DBUILD_CPU_DEMOS=OFF
 		-DBUILD_DEMOS=OFF
+		-DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON
 		# NOTE: On Windows, windows are not set to be installed by default.
 		# This flag makes sure they get installed.
 		-DINSTALL_LIBS=ON
