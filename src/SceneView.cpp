@@ -171,8 +171,11 @@ void SceneView::compileGLObjects()
     {
         omicron::Ref<GLObjectsVisitor> dlv = new GLObjectsVisitor(
             GLObjectsVisitor::SWITCH_OFF_DISPLAY_LISTS |
-            GLObjectsVisitor::SWITCH_ON_VERTEX_BUFFER_OBJECTS |
-            GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
+            GLObjectsVisitor::SWITCH_ON_VERTEX_BUFFER_OBJECTS);
+        // 6/13/2014: COMPILE_STATE_ATTRIBUTES removed since it breaks ffmpeg
+        // playback.
+        // see https://groups.google.com/forum/#!topic/omegalib/77auW4TVGRo
+            //GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
         dlv->reset();
         dlv->setDatabaseRequestHandler(_databasePager);
         dlv->setFrameStamp(_frameStamp.get());
@@ -183,7 +186,7 @@ void SceneView::compileGLObjects()
              dlv->setTraversalNumber(_frameStamp->getFrameNumber());
         }
         _camera->accept(*(dlv.get()));
-	//py->queueCommand("print('>>>>>>> GL objects compiled')");
+    //py->queueCommand("print('>>>>>>> GL objects compiled')");
         
     } 
 }
