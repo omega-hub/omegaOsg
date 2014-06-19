@@ -140,6 +140,8 @@ OsgModule::OsgModule():
     myRootNode = NULL;
     //myRootSceneObject = NULL;
 
+	compileGLObjects = true;
+
     myDatabasePager = osgDB::DatabasePager::create();
 
     myFrameStamp = new osg::FrameStamp;

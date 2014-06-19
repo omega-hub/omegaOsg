@@ -36,6 +36,7 @@
 #include "omega/SystemManager.h"
 #include "omega/PythonInterpreter.h"
 #include "omegaOsg/SceneView.h"
+#include "omegaOsg/OsgModule.h"
 
 #include <osgUtil/Statistics>
 #include <osgUtil/UpdateVisitor>
@@ -58,6 +59,7 @@
 
 using namespace osg;
 using namespace osgUtil;
+using namespace omegaOsg;
 
 ///////////////////////////////////////////////////////////////////////////////
 SceneView::SceneView( osgDB::DatabasePager* dp)
@@ -67,7 +69,7 @@ SceneView::SceneView( osgDB::DatabasePager* dp)
 
     //_prioritizeTextures = false;
     
-    _camera = new Camera;
+    _camera = new osg::Camera;
     _camera->setViewport(new Viewport);
     
     _initCalled = false;
@@ -159,7 +161,8 @@ void SceneView::setSceneData(osg::Node* node)
     // add the new one in.
     _camera->addChild(node);
 
-    compileGLObjects();
+	if(OsgModule::instance()->isCompileGLObjectsEnabled())
+		compileGLObjects();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
