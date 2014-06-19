@@ -109,6 +109,9 @@ namespace omegaOsg
         void setDepthPartitionZ(float value) { myDepthPartitionZ = value; }
         float getDepthPartitionZ() { return myDepthPartitionZ; }
 
+		bool isCompileGLObjectsEnabled(){return compileGLObjects; }
+		void setCompileGLObjects(bool value){compileGLObjects = value;}
+
     private:
         static OsgModule* mysInstance;
 
@@ -118,6 +121,8 @@ namespace omegaOsg
 
         OsgDrawInformation::DepthPartitionMode myDepthPartitionMode;
         float myDepthPartitionZ;
+
+		bool compileGLObjects;
 
         //OsgSceneObject* myRootSceneObject;
         Ref<osg::Node> myRootNode;
