@@ -7,10 +7,13 @@ set( srcs
 		OsgSceneObject.cpp
 		SceneView.cpp
 		ReaderFreeImage.cpp
+        PointIntersector.cpp
 		)
 		
 SET( headers 
-		# omega
+        # internal..
+        PointIntersector.h
+		# omegaOsg
 		../omegaOsg/oosgbase.h
 		../omegaOsg/OsgModule.h
 		../omegaOsg/OsgDebugOverlay.h

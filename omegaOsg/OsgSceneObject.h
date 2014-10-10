@@ -60,7 +60,13 @@ namespace omegaOsg
 	//!	contains an osg node and transformation.
 	class OOSG_API OsgSceneObject: public NodeComponent, SceneNodeListener
 	{
-	public:
+    public:
+        //! SceneNode flag bit used to enable point picking for osg objects
+        //! attached to the scene node. Default flag is 1 << 16 but can be 
+        //! changed by users to avoid overlap with other custom flags.
+        static uint SceneNodeHitPointsFlag;
+
+    public:
 		//! Creates a new OsgSceneObject wrapping an osg Node.
 		//! If th osg Node is already a matrix transform, OsgSceneObject will RESET any transformation 
 		//! currently applied to the node, and use the transformation of the SceneNode owning this object instead.
