@@ -15,7 +15,7 @@ PointIntersector::PointIntersector()
 
 PointIntersector::PointIntersector( const osg::Vec3& start, const osg::Vec3& end )
 :   osgUtil::LineSegmentIntersector(start, end),
-    _pickBias(2.0f)
+    _pickBias(0.1f)
 {
 }
 
@@ -83,20 +83,36 @@ void PointIntersector::intersect( osgUtil::IntersectionVisitor& iv, osg::Drawabl
         if ( !vertices ) return;
         
         osg::Vec3d dir = e - s;
+
+		Intersection closestHit;
+		double closestHitDistance = -1;
+		
         double invLength = 1.0 / dir.length();
         for ( unsigned int i=0; i<vertices->size(); ++i )
         {
             double distance =  fabs( (((*vertices)[i] - s)^dir).length() );
-            distance *= invLength;
+
+			distance *= invLength;
             if ( _pickBias<distance ) continue;
-            
-            Intersection hit;
+
+			double distanceFromRayOrigin =  sqrt( pow(((*vertices)[i]).x() - _start.x(),2.0) + pow(((*vertices)[i]).y() - _start.y(),2.0) +  pow(((*vertices)[i]).z() - _start.z(),2.0) );
+
+			Intersection hit;
             hit.ratio = distance;
             hit.nodePath = iv.getNodePath();
             hit.drawable = drawable;
             hit.matrix = iv.getModelMatrix();
             hit.localIntersectionPoint = (*vertices)[i];
-            insertIntersection( hit );
+            //insertIntersection( hit ); // Instead of returning all intersections, we calculate the closest one below
+
+			if( closestHitDistance == -1 || closestHitDistance > distanceFromRayOrigin )
+			{
+				closestHit = hit;
+				closestHitDistance = distanceFromRayOrigin;
+			}
         }
+		// Only add the closest intersection hit to the list
+		if( closestHitDistance != -1 )
+			insertIntersection( closestHit );
     }
 }
