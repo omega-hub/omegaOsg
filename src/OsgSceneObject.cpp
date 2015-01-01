@@ -175,21 +175,21 @@ bool OsgSceneObject::intersectRay(const Ray& ray, Vector3f* hitPoint)
     if(getOwner()->isFlagSet(SceneNodeHitPointsFlag))
     {
         Ref<PointIntersector> intersector = new PointIntersector( orig, end );
-		osgUtil::IntersectionVisitor iv( intersector.get() );
-		myTransform->accept(iv);
+        osgUtil::IntersectionVisitor iv( intersector.get() );
+        myTransform->accept(iv);
 
-		if ( intersector->containsIntersections() )
+        if ( intersector->containsIntersections() )
         {
-			PointIntersector::Intersection result = *(intersector->getIntersections().begin());
-			osg::Vec3d intersect = result.getWorldIntersectPoint();
+            PointIntersector::Intersection result = *(intersector->getIntersections().begin());
+            osg::Vec3d intersect = result.getWorldIntersectPoint();
 
-			hitPoint->x() = intersect[0];
-			hitPoint->y() = intersect[1];
-			hitPoint->z() = intersect[2];
-			return true;
-		}
-		else
-			return false;
+            hitPoint->x() = intersect[0];
+            hitPoint->y() = intersect[1];
+            hitPoint->z() = intersect[2];
+            return true;
+        }
+        else
+            return false;
     }
     else
     {
