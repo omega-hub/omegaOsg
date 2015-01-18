@@ -38,10 +38,12 @@ if(OMEGA_OSG_ENABLE_COLLADA_DOM)
     set(OMEGA_COLLADA_LIBRARY ${COLLADA_LIBRARY})
 endif()
 
+# We are in the process of switching from 3.1 to 3.2. For now, use 3.2 on windows
+# and 3.1 on linux/OSX until the new version is tested.
 if(WIN32)
 	ExternalProject_Add(
 		osg
-		URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
+		URL http://omegalib.s3.amazonaws.com/osg/osg-3.2.1.tar.gz
 		CMAKE_ARGS
 			-DBUILD_OSG_APPLICATIONS=OFF
 			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
