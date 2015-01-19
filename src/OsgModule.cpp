@@ -163,7 +163,7 @@ OsgModule::OsgModule():
 
     String osgv = ostr("%1%.%2%.%3%", %vmaj %vmin %vp);
 
-    String libPath = execPath + ":" + execPath + ostr("osg/osgPlugins-{0}:", %osgv) + execPath + String("osg:")+ execPath + ostr("osgPlugins-{0}:", %osgv);
+    String libPath = execPath + ":" + execPath + ostr("osg/osgPlugins-%1%:", %osgv) + execPath + String("osg:")+ execPath + ostr("osgPlugins-%1%:", %osgv);
     ofmsg("OSG Plugin Path(s): %1%", %libPath);
     reg->setLibraryFilePathList(libPath);
 
