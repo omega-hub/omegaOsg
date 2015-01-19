@@ -44,6 +44,7 @@
 #include <osgDB/DatabasePager>
 #include <osg/Node>
 #include <osg/FrameStamp>
+#include <osg/Version>
 
 #include "omegaOsg/ReaderFreeImage.h"
 #ifdef OMEGAOSG_USE_INVENTOR
@@ -155,7 +156,10 @@ OsgModule::OsgModule():
     String execName;
     StringUtils::splitFilename(execPath, execName, execPath);
     osgDB::Registry* reg = osgDB::Registry::instance();
-    String libPath = execPath + ":" + execPath + String("osg/osgPlugins-3.3.0:") + execPath + String("osg:")+ execPath + String("osgPlugins-3.3.0:");
+
+    String osgv = ostr("{0}.{1}.{2}", %OPENSCENEGRAPH_MAJOR_VERSION %OPENSCENEGRAPH_MINOR_VERSION %OPENSCENEGRAPH_PATCH_VERSION);
+
+    String libPath = execPath + ":" + execPath + ostr("osg/osgPlugins-{0}:", %osgv) + execPath + String("osg:")+ execPath + ostr("osgPlugins-{0}:", %osgv);
     ofmsg("OSG Plugin Path(s): %1%", %libPath);
     reg->setLibraryFilePathList(libPath);
 

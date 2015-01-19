@@ -38,9 +38,13 @@ if(OMEGA_OSG_ENABLE_COLLADA_DOM)
     set(OMEGA_COLLADA_LIBRARY ${COLLADA_LIBRARY})
 endif()
 
-# We are in the process of switching from 3.1 to 3.2. For now, use 3.2 on windows
-# and 3.1 on linux/OSX until the new version is tested.
+# We are in the process of switching from 3.3.0 to 3.2.1 For now, use 3.2.1 on windows
+# and 3.3.0 on linux/OSX until the new version is tested.
+# NOTE: 3.2.1 is a later version than 3.3.0 due to the release version numbering
+# system used by osg, where 3.3 is a developer release while 3.2 is stable, with minor
+# release 3.2.1 coming out after 3.3.0.
 if(WIN32)
+    set(OSG_VERSION "3.2.1" CACHE INTERNAL "")
 	ExternalProject_Add(
 		osg
 		URL http://omegalib.s3.amazonaws.com/osg/osg-3.2.1.tar.gz
@@ -54,7 +58,9 @@ if(WIN32)
 			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}
             -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
 		)
+
 elseif(APPLE)
+    set(OSG_VERSION "3.3.0" CACHE INTERNAL "")
 	ExternalProject_Add(
 		osg
         DEPENDS ${OMEGA_OSG_DEPENDENCIES}
@@ -74,7 +80,9 @@ elseif(APPLE)
             -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
             INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
         )
+    
 else()
+    set(OSG_VERSION "3.3.0" CACHE INTERNAL "")
 	ExternalProject_Add(
 		osg
         DEPENDS ${OMEGA_OSG_DEPENDENCIES}
