@@ -141,7 +141,7 @@ OsgModule::OsgModule():
     myRootNode = NULL;
     //myRootSceneObject = NULL;
 
-	compileGLObjects = true;
+    compileGLObjects = true;
 
     myDatabasePager = osgDB::DatabasePager::create();
 
@@ -157,7 +157,11 @@ OsgModule::OsgModule():
     StringUtils::splitFilename(execPath, execName, execPath);
     osgDB::Registry* reg = osgDB::Registry::instance();
 
-    String osgv = ostr("{0}.{1}.{2}", %OPENSCENEGRAPH_MAJOR_VERSION %OPENSCENEGRAPH_MINOR_VERSION %OPENSCENEGRAPH_PATCH_VERSION);
+    int vmaj = OPENSCENEGRAPH_MAJOR_VERSION;
+    int vmin = OPENSCENEGRAPH_MINOR_VERSION;
+    int vp = OPENSCENEGRAPH_PATCH_VERSION;
+
+    String osgv = ostr("%1%.%2%.%3%", %vmaj %vmin %vp);
 
     String libPath = execPath + ":" + execPath + ostr("osg/osgPlugins-{0}:", %osgv) + execPath + String("osg:")+ execPath + ostr("osgPlugins-{0}:", %osgv);
     ofmsg("OSG Plugin Path(s): %1%", %libPath);
