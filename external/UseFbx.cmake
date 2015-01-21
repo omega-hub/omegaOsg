@@ -19,12 +19,7 @@ set(EXTLIB_TGZ ${CMAKE_BINARY_DIR}/${EXTLIB_NAME}.tar.gz)
 if(NOT EXISTS ${EXTLIB_DIR})
 	message(STATUS "Downloading FBX SDK binary archive...")
 	if(APPLE)
-        # Do we need this check?
-		if(NOT EXISTS ${EXTLIB_TGZ})
-			file(DOWNLOAD http://github.com/omega-hub/omegaOsg/releases/download/dep-osx/${EXTLIB_NAME}.tar.gz ${EXTLIB_TGZ} SHOW_PROGRESS)
-		else()
-			message("already downloaded")
-		endif()
+		file(DOWNLOAD http://github.com/omega-hub/omegaOsg/releases/download/dep-osx/${EXTLIB_NAME}.tar.gz ${EXTLIB_TGZ} SHOW_PROGRESS)
 	else()
         # Visual Studio 2008 & Linux FBX SDKs are downloaded as a single package
 		if(OMEGA_TOOL_VS10 OR UNIX)
