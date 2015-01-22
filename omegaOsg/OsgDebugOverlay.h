@@ -62,7 +62,7 @@ namespace omegaOsg
         virtual void draw(const DrawContext& context);
 
     private:
-        RenderBinData* myData;
+        Ref<RenderBinData> myData;
     };
 };
 #endif

@@ -73,7 +73,7 @@ OsgRenderPass::OsgRenderPass(Renderer* client, const String& name): RenderPass(c
 OsgRenderPass::~OsgRenderPass()
 {
     mySceneView = NULL;
-    myDebugOverlay->unref();
+    //myDebugOverlay->unref();
     myDebugOverlay = NULL;
 }
 

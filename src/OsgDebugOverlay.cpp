@@ -148,7 +148,6 @@ OsgDebugOverlay::OsgDebugOverlay()
 ////////////////////////////////////////////////////////////////////////////////
 OsgDebugOverlay::~OsgDebugOverlay()
 {
-    myData->unref();
     myData = NULL;
 }
 
