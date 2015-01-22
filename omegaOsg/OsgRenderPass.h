@@ -115,7 +115,7 @@ namespace omegaOsg
         Ref<Stat> myCullTimeStat;
         Ref<Stat> myDrawTimeStat;
 
-        OsgDebugOverlay* myDebugOverlay;
+        Ref<OsgDebugOverlay> myDebugOverlay;
     };
 };
 #endif
