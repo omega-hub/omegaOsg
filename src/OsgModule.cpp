@@ -164,7 +164,7 @@ OsgModule::OsgModule():
     String osgv = ostr("%1%.%2%.%3%", %vmaj %vmin %vp);
 
     String libPath = execPath + ":" + execPath + ostr("osg/osgPlugins-%1%:", %osgv) + execPath + String("osg:")+ execPath + ostr("osgPlugins-%1%:", %osgv);
-    ofmsg("OSG Plugin Path(s): %1%", %libPath);
+    oflog(Verbose, "OSG Plugin Path(s): %1%", %libPath);
     reg->setLibraryFilePathList(libPath);
 
     reg->addReaderWriter(new ReaderFreeImage());
@@ -177,7 +177,7 @@ OsgModule::OsgModule():
 ///////////////////////////////////////////////////////////////////////////////
 OsgModule::~OsgModule()
 {
-    omsg("~OsgModule");
+    olog(Verbose, "~OsgModule");
     mysInstance = NULL;
 }
 

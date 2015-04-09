@@ -45,7 +45,7 @@ set(OSGBULLET_ARGS
 if(WIN32)
         # The OSGWORKS_STATIC preprocessor definition tells osgBullet that
         # we are using the static version of osgWorks.
-        set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D\"OSGWORKS_STATIC\"")
+        #set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} /D\"OSGWORKS_STATIC\"")
         set(OSGBULLET_ARGS
                 #-DCMAKE_SHARED_LINKER_FLAGS:STRING="${CMAKE_SHARED_LINKER_FLAGS} /NODEFAULTLIB:msvcprt.lib /NODEFAULTLIB:libcpmt.lib"
                 #-DCMAKE_LINKER_FLAGS:STRING="${CMAKE_LINKER_FLAGS} /NODEFAULTLIB:libcpmt.lib /NODEFAULTLIB:msvcprt.lib"
@@ -75,7 +75,7 @@ if(WIN32)
                 -DOSG_INCLUDE_DIR:PATH=${OSG_INCLUDES}
                 -DOSG_LIBRARY:PATH=${osg_LIBRARY}
                 -DOSG_LIBRARY_DEBUG:PATH=${osg_LIBRARY_DEBUG}
-		-DOSG_DIR:PATH=${OSG_INSTALL_DIR}
+		        -DOSG_DIR:PATH=${OSG_INSTALL_DIR}
                 #osgGA
                 -DOSGGA_INCLUDE_DIR:PATH=${OSG_INCLUDES}
                 -DOSGGA_LIBRARY:PATH=${osgGA_LIBRARY}
@@ -114,7 +114,6 @@ elseif(APPLE)
 		set(OsgInstallType "Source And Build Tree")
         #set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOSGWORKS_STATIC")
         set(OSGBULLET_ARGS
-        		-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
                 #osg
                 -DOSGInstallType:STRING=${OsgInstallType}
                 -DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
@@ -134,11 +133,12 @@ else()
         set(OsgInstallType "Source And Build Tree")
         #set(OSGBullet_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DOSGWORKS_STATIC")
         set(OSGBULLET_ARGS
+        		-DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
                 #osg
                 -DOSGInstallType:STRING=${OsgInstallType}
                 -DOSGSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg
                 -DOSGBuildRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-build
-		-DOSG_DIR:PATH=${OSG_INSTALL_DIR}/${OSGWORKS_LIB_SUFFIX}
+		        -DOSG_DIR:PATH=${OSG_INSTALL_DIR}/${OSGWORKS_LIB_SUFFIX}
                 #Bullet
                 -DBulletInstallType:STRING=${BulletInstallType}
                 -DBulletSourceRoot:STRING=${CMAKE_BINARY_DIR}/modules/omegaOsg/bullet-prefix/src/bullet

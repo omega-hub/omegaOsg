@@ -113,7 +113,7 @@ SceneView::SceneView(const SceneView& rhs, const osg::CopyOp& copyop):
 ///////////////////////////////////////////////////////////////////////////////
 SceneView::~SceneView()
 {
-    omega::omsg("~SceneView");
+    //omega::omsg("~SceneView");
 }
 
 //class NH: public osg::NotifyHandler
