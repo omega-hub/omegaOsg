@@ -54,19 +54,15 @@ if(WIN32)
         -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}
         -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}
     )
-elseif(APPLE)
-    set(OSG_ARGS
-        ${OSG_ARGS}
-        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
-        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
-    )
 else()
     set(OSG_ARGS
         ${OSG_ARGS}
+        # We force osg to compile using C++98 (libstdc++) on all platforms.
+        # On apple, osg tried to use C++11 (libc++) by default, which causes
+        # linker error with other platforms.
+        # In the future, we should move everything to c++11, but for the time being
+        # this is an easier solution.
+        -DOSG_CXX_LANGUAGE_STANDARD:STRING=c++98
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
@@ -128,8 +124,8 @@ elseif(APPLE)
 	endforeach()
 else()
     foreach( C ${OSG_COMPONENTS} )
-        set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}.so)
-        set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}d.so)
+        set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}.so)
+        set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}d.so)
         set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
     endforeach()
 endif()
