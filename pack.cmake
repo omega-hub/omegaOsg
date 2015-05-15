@@ -1,4 +1,4 @@
-set(OSG_VERSION 3.2.1)
+set(OSG_VERSION 3.3.8)
 set(OSG_FILE_VERSION 122)
 
 if(WIN32)
@@ -26,6 +26,48 @@ if(WIN32)
             ${BIN_DIR}/osgbDynamics.dll
             ${BIN_DIR}/osgbInteraction.dll
             ${BIN_DIR}/ot20-OpenThreads.dll
+        )
+    file(INSTALL DESTINATION ${PACKAGE_DIR}/bin
+        TYPE DIRECTORY
+        FILES
+            ${BIN_DIR}/osgPlugins-${OSG_VERSION}
+        )
+elseif(APPLE)
+	
+	set(COMPONENTS
+		osg
+		osgAnimation
+		osgDB
+		osgFX
+		osgGA
+		osgManipulator
+		osgParticle
+		osgPresentation
+		osgShadow
+		osgSim
+		osgTerrain
+		osgText
+		osgUtil
+		osgViewer
+		osgWidget)
+		
+	foreach(component ${COMPONENTS})
+		file(INSTALL DESTINATION ${PACKAGE_DIR}/bin
+			TYPE FILE
+			FILES
+				${BIN_DIR}/lib${component}.${OSG_FILE_VERSION}.dylib
+				${BIN_DIR}/lib${component}.${OSG_VERSION}.dylib
+				${BIN_DIR}/lib${component}.dylib
+				)
+	endforeach()
+	
+    file(INSTALL DESTINATION ${PACKAGE_DIR}/bin
+        TYPE FILE
+        FILES
+            ${BIN_DIR}/libomegaOsg.dylib
+            ${BIN_DIR}/libfbxsdk.dylib
+            ${BIN_DIR}/libOpenThreads.20.dylib
+            ${BIN_DIR}/libOpenThreads.3.3.0.dylib
         )
     file(INSTALL DESTINATION ${PACKAGE_DIR}/bin
         TYPE DIRECTORY
