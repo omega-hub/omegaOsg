@@ -167,7 +167,7 @@ elseif(APPLE)
             set(${C}_LIBRARY_DEBUG ${OSGBULLET_LIB_DIR}/lib${C}.dylib)
             set(OSGBULLET_LIBRARIES ${OSGBULLET_LIBRARIES} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
     endforeach()
-elseif()
+else()
     foreach( C ${OSGBULLET_COMPONENTS} )
             set(${C}_LIBRARY ${OSGBULLET_LIB_DIR}/lib${C}.so)
             set(${C}_LIBRARY_DEBUG ${OSGBULLET_LIB_DIR}/lib${C}.so)
@@ -176,6 +176,6 @@ elseif()
 endif()
 
 set(OSGBULLET_LIBS ${OSGBULLET_LIBRARIES} ${BULLET_LIBS} CACHE INTERNAL "")
-    
-add_definitions(-DOSGBULLET_STATIC)
-    
+if(WIN32)    
+    add_definitions(-DOSGBULLET_STATIC)
+endif()    
