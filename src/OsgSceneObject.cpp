@@ -108,7 +108,7 @@ void OsgSceneObject::update(const UpdateContext& context)
         oxform.set(m.data());
     }
     myTransform->setMatrix( oxform );
-    //requestBoundingBoxUpdate();
+    requestBoundingBoxUpdate();
 
     //const osg::BoundingSphere& bs = myNode->getBound();
     //Vector3f center(bs.center()[0], bs.center()[1], bs.center()[2]);

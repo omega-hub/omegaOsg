@@ -67,7 +67,7 @@ osgUtil::Intersector* PointIntersector::clone( osgUtil::IntersectionVisitor& iv 
 
 void PointIntersector::intersect( osgUtil::IntersectionVisitor& iv, osg::Drawable* drawable )
 {
-    osg::BoundingBox bb = drawable->getBound();
+    osg::BoundingBox bb = drawable->getBoundingBox();
     bb.xMin() -= _pickBias; bb.xMax() += _pickBias;
     bb.yMin() -= _pickBias; bb.yMax() += _pickBias;
     bb.zMin() -= _pickBias; bb.zMax() += _pickBias;
@@ -84,20 +84,20 @@ void PointIntersector::intersect( osgUtil::IntersectionVisitor& iv, osg::Drawabl
         
         osg::Vec3d dir = e - s;
 
-		Intersection closestHit;
-		double closestHitDistance = -1;
-		
+        Intersection closestHit;
+        double closestHitDistance = -1;
+        
         double invLength = 1.0 / dir.length();
         for ( unsigned int i=0; i<vertices->size(); ++i )
         {
             double distance =  fabs( (((*vertices)[i] - s)^dir).length() );
 
-			distance *= invLength;
+            distance *= invLength;
             if ( _pickBias<distance ) continue;
 
-			double distanceFromRayOrigin =  sqrt( pow(((*vertices)[i]).x() - _start.x(),2.0) + pow(((*vertices)[i]).y() - _start.y(),2.0) +  pow(((*vertices)[i]).z() - _start.z(),2.0) );
+            double distanceFromRayOrigin =  sqrt( pow(((*vertices)[i]).x() - _start.x(),2.0) + pow(((*vertices)[i]).y() - _start.y(),2.0) +  pow(((*vertices)[i]).z() - _start.z(),2.0) );
 
-			Intersection hit;
+            Intersection hit;
             hit.ratio = distance;
             hit.nodePath = iv.getNodePath();
             hit.drawable = drawable;
@@ -105,14 +105,14 @@ void PointIntersector::intersect( osgUtil::IntersectionVisitor& iv, osg::Drawabl
             hit.localIntersectionPoint = (*vertices)[i];
             //insertIntersection( hit ); // Instead of returning all intersections, we calculate the closest one below
 
-			if( closestHitDistance == -1 || closestHitDistance > distanceFromRayOrigin )
-			{
-				closestHit = hit;
-				closestHitDistance = distanceFromRayOrigin;
-			}
+            if( closestHitDistance == -1 || closestHitDistance > distanceFromRayOrigin )
+            {
+                closestHit = hit;
+                closestHitDistance = distanceFromRayOrigin;
+            }
         }
-		// Only add the closest intersection hit to the list
-		if( closestHitDistance != -1 )
-			insertIntersection( closestHit );
+        // Only add the closest intersection hit to the list
+        if( closestHitDistance != -1 )
+            insertIntersection( closestHit );
     }
 }
