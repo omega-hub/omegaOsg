@@ -166,32 +166,34 @@ void SceneView::setSceneData(osg::Node* node)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+// This lock is needed to ensure that GL objects are not initialized in multiple
+// threads during startup, since this can cause issues on multi-gpu configs.
+// NOTE: waiting to create objects until all the contexts are fully realized
+// is enough to avoid crashes, so this lock here is a bit overkill, but it
+// fixes multi-gpu running for now.
+Lock compileGlObjectsLock;
 void SceneView::compileGLObjects()
 {
     omega::PythonInterpreter* py = omega::SystemManager::instance()->getScriptInterpreter();
-    //py->queueCommand("print('>>>>>>> compiling GL objects')");
-    //if (_camera.valid() && _initVisitor.valid())
+    compileGlObjectsLock.lock();
+    omicron::Ref<GLObjectsVisitor> dlv = new GLObjectsVisitor(
+        GLObjectsVisitor::SWITCH_OFF_DISPLAY_LISTS |
+        GLObjectsVisitor::SWITCH_ON_VERTEX_BUFFER_OBJECTS);
+    // 6/13/2014: COMPILE_STATE_ATTRIBUTES removed since it breaks ffmpeg
+    // playback.
+    // see https://groups.google.com/forum/#!topic/omegalib/77auW4TVGRo
+        //GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
+    dlv->reset();
+    dlv->setDatabaseRequestHandler(_databasePager);
+    dlv->setFrameStamp(_frameStamp.get());
+    dlv->setState(_renderInfo.getState());
+    
+    if (_frameStamp.valid())
     {
-        omicron::Ref<GLObjectsVisitor> dlv = new GLObjectsVisitor(
-            GLObjectsVisitor::SWITCH_OFF_DISPLAY_LISTS |
-            GLObjectsVisitor::SWITCH_ON_VERTEX_BUFFER_OBJECTS);
-        // 6/13/2014: COMPILE_STATE_ATTRIBUTES removed since it breaks ffmpeg
-        // playback.
-        // see https://groups.google.com/forum/#!topic/omegalib/77auW4TVGRo
-            //GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
-        dlv->reset();
-        dlv->setDatabaseRequestHandler(_databasePager);
-        dlv->setFrameStamp(_frameStamp.get());
-        dlv->setState(_renderInfo.getState());
-        
-        if (_frameStamp.valid())
-        {
-             dlv->setTraversalNumber(_frameStamp->getFrameNumber());
-        }
-        _camera->accept(*(dlv.get()));
-    //py->queueCommand("print('>>>>>>> GL objects compiled')");
-        
-    } 
+         dlv->setTraversalNumber(_frameStamp->getFrameNumber());
+    }
+    _camera->accept(*(dlv.get()));
+    compileGlObjectsLock.unlock();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
