@@ -49,6 +49,7 @@ elseif(APPLE)
 		osgText
 		osgUtil
 		osgViewer
+		osgVolume
 		osgWidget)
 		
 	foreach(component ${COMPONENTS})
@@ -60,6 +61,18 @@ elseif(APPLE)
 				${BIN_DIR}/lib${component}.dylib
 				)
 	endforeach()
+	
+	# on OSX/Linux also install the osgBullet shared objects
+    file(INSTALL DESTINATION ${PACKAGE_DIR}/bin
+        TYPE FILE
+        FILES
+            ${BIN_DIR}/libosgbCollision.3.00.00.dylib
+            ${BIN_DIR}/libosgbCollision.dylib
+            ${BIN_DIR}/libosgbDynamics.3.00.00.dylib
+            ${BIN_DIR}/libosgbDynamics.dylib
+            ${BIN_DIR}/libosgbInteraction.3.00.00.dylib
+            ${BIN_DIR}/libosgbInteraction.dylib
+        )
 	
     file(INSTALL DESTINATION ${PACKAGE_DIR}/bin
         TYPE FILE

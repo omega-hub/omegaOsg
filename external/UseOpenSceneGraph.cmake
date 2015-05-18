@@ -57,6 +57,9 @@ if(WIN32)
 else()
     set(OSG_ARGS
         ${OSG_ARGS}
+        -DCMAKE_MACOSX_RPATH=${CMAKE_MACOSX_RPATH}
+        -DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}
+        -DCMAKE_BUILD_WITH_INSTALL_RPATH=${CMAKE_BUILD_WITH_INSTALL_RPATH}
         # We force osg to compile using C++98 (libstdc++) on all platforms.
         # On apple, osg tried to use C++11 (libc++) by default, which causes
         # linker error with other platforms.
