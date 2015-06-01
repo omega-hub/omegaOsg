@@ -1,3 +1,5 @@
+module_version(1.1)
+
 # Open Scene Graph configuration, libraries and applications
 include(external/UseOpenSceneGraph.cmake)
 include_directories(./)
