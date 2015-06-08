@@ -1,35 +1,23 @@
 include(ExternalProject)
 
-set(OMEGA_USE_EXTERNAL_OSG false CACHE BOOL "Enable to use an external osg build instead of the built-in one.")
+set(OMEGA_OSG_DEPENDENCIES CACHE INTERNAL "")
+set(OSG_LIBS "")
+
+# Directories used by osg
+set(OSG_BASE_DIR ${CMAKE_BINARY_DIR}/3rdparty/osg)
+set(OSG_BINARY_DIR ${OSG_BASE_DIR}/build)
+set(OSG_SOURCE_DIR ${OSG_BASE_DIR}/source)
+set(OSG_INSTALL_DIR ${OSG_BASE_DIR}/install CACHE INTERNAL "")
+
+# Collada support (for reading VRML files.... we might just drop this in the 
+# future)
 if(_OMEGA_OSG_ENABLE_COLLADA_DOM)
     set(OMEGA_OSG_ENABLE_COLLADA_DOM true CACHE BOOL "Enable the Collada plugin for OSG.")
 else()
     set(OMEGA_OSG_ENABLE_COLLADA_DOM false CACHE BOOL "Enable the Collada plugin for OSG.")
 endif()
-
 set(OMEGA_COLLADA_INCLUDE_DIR CACHE INTERNAL "")
 set(OMEGA_COLLADA_LIBRARY CACHE INTERNAL "")
-set(OMEGA_OSG_DEPENDENCIES CACHE INTERNAL "")
-set(OSG_LIBS "")
-
-if(OMEGA_USE_EXTERNAL_OSG)
-	# When using external osg builds, for now you need to make sure manually the OSG binary
-	# include dir is in the compiler include search, paths otherwise osgWorks won't compile.
-	# I may find a better solution for this in the future but it's not really high priority.
-	set(OMEGA_EXTERNAL_OSG_BINARY_PATH CACHE PATH "The external osg build path")
-	set(OMEGA_EXTERNAL_OSG_SOURCE_PATH CACHE PATH "The external osg source path")
-endif()
-
-if(OMEGA_USE_EXTERNAL_OSG)
-    set(EXTLIB_DIR ${OMEGA_EXTERNAL_OSG_BINARY_PATH})
-    set(OSG_BINARY_DIR ${OMEGA_EXTERNAL_OSG_BINARY_PATH})
-else()
-    set(OSG_BASE_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src)
-    set(OSG_BINARY_DIR ${OSG_BASE_DIR}/osg-build)
-    set(OSG_SOURCE_DIR ${OSG_BASE_DIR}/osg)
-    set(OSG_INSTALL_DIR ${OSG_BASE_DIR}/osg-install)
-endif()
-
 if(OMEGA_OSG_ENABLE_COLLADA_DOM)
     include(${CMAKE_CURRENT_LIST_DIR}/UseMinizip.cmake)
     include(${CMAKE_CURRENT_LIST_DIR}/UseCollada.cmake)
@@ -38,155 +26,118 @@ if(OMEGA_OSG_ENABLE_COLLADA_DOM)
     set(OMEGA_COLLADA_LIBRARY ${COLLADA_LIBRARY})
 endif()
 
-# We are in the process of switching from 3.3.0 to 3.2.1 For now, use 3.2.1 on windows
-# and 3.3.0 on linux/OSX until the new version is tested.
-# NOTE: 3.2.1 is a later version than 3.3.0 due to the release version numbering
-# system used by osg, where 3.3 is a developer release while 3.2 is stable, with minor
-# release 3.2.1 coming out after 3.3.0.
-if(WIN32)
-    set(OSG_VERSION "3.2.1" CACHE INTERNAL "")
-	ExternalProject_Add(
-		osg
-		URL http://omegalib.s3.amazonaws.com/osg/osg-3.2.1.tar.gz
-		CMAKE_ARGS
-			-DBUILD_OSG_APPLICATIONS=OFF
-			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
-			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
-			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
-			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
-			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}
-			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}
-            -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
-		)
+# Save the version of OSG used. Right now this variable only used by modules
+# that create osg plugins (like omegaOsgEarth) to put the plugins in the
+# right directory.
+# You can find the OSG version in the main osg cmake file around line 54..
+# in the future we can probably pull the value directly from there.
+set(OSG_VERSION "3.3.8" CACHE INTERNAL "")
 
-elseif(APPLE)
-    set(OSG_VERSION "3.3.0" CACHE INTERNAL "")
-	ExternalProject_Add(
-		osg
-        DEPENDS ${OMEGA_OSG_DEPENDENCIES}
-        URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
-		CMAKE_ARGS 
-			-DBUILD_OSG_APPLICATIONS=OFF
-			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
-			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
-            -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
-            -DCOLLADA_DYNAMIC_LIBRARY=${COLLADA_LIBRARY}
-            -DCOLLADA_INCLUDE_DIR=${COLLADA_INCLUDE_DIR}
-            -DCOLLADA_MINIZIP_LIBRARY=${MINIZIP_LIBRARY}
-            -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-            INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
-        )
-    
+# Set the common project arguments
+set(OSG_ARGS
+    -DFREETYPE_DIR=${CMAKE_BINARY_DIR}/freetype
+    -DBUILD_OSG_APPLICATIONS=OFF
+    -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
+    -DCOLLADA_DYNAMIC_LIBRARY=${COLLADA_LIBRARY}
+    -DCOLLADA_INCLUDE_DIR=${COLLADA_INCLUDE_DIR}
+    -DCOLLADA_MINIZIP_LIBRARY=${MINIZIP_LIBRARY}
+    -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
+)
+
+# Set platform-specific arguments
+if(WIN32)
+    set(OSG_ARGS
+        ${OSG_ARGS}
+        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
+        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
+        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}
+        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}
+        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}
+        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}
+    )
 else()
-    set(OSG_VERSION "3.3.0" CACHE INTERNAL "")
-	ExternalProject_Add(
-		osg
-        DEPENDS ${OMEGA_OSG_DEPENDENCIES}
-        URL ${CMAKE_SOURCE_DIR}/modules/omegaOsg/external/osg.tar.gz
-		CMAKE_ARGS 
-			-DBUILD_OSG_APPLICATIONS=OFF
-			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-			-DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-			-DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg
-			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
-			-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/osg
-            -DCMAKE_INSTALL_PREFIX:PATH=${OSG_INSTALL_DIR}
-            -DCOLLADA_DYNAMIC_LIBRARY=${COLLADA_LIBRARY}
-            -DCOLLADA_INCLUDE_DIR=${COLLADA_INCLUDE_DIR}
-            -DCOLLADA_MINIZIP_LIBRARY=${MINIZIP_LIBRARY}
-            -DCMAKE_CXX_FLAGS:STRING=${CMAKE_CXX_FLAGS}
-            -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-            INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
-		)
+    set(OSG_ARGS
+        ${OSG_ARGS}
+        -DCMAKE_MACOSX_RPATH=${CMAKE_MACOSX_RPATH}
+        -DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}
+        -DCMAKE_BUILD_WITH_INSTALL_RPATH=${CMAKE_BUILD_WITH_INSTALL_RPATH}
+        # We force osg to compile using C++98 (libstdc++) on all platforms.
+        # On apple, osg tried to use C++11 (libc++) by default, which causes
+        # linker error with other platforms.
+        # In the future, we should move everything to c++11, but for the time being
+        # this is an easier solution.
+        -DOSG_CXX_LANGUAGE_STANDARD:STRING=c++98
+        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
+        -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
+    )
 endif()
 
+# Create the OSG external project
+ExternalProject_Add(
+    osg
+    DEPENDS ${OMEGA_OSG_DEPENDENCIES}
+    URL http://github.com/omega-hub/osg/archive/master.tar.gz
+    CMAKE_ARGS ${OSG_ARGS}
+    INSTALL_COMMAND ${PLATFORM_INSTALL_COMMAND}
+    
+    # directories
+    TMP_DIR ${CMAKE_BINARY_DIR}/3rdparty/tmp
+    STAMP_DIR ${CMAKE_BINARY_DIR}/3rdparty/stamp
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/3rdparty/osg
+    SOURCE_DIR ${OSG_SOURCE_DIR}
+    BINARY_DIR ${OSG_BINARY_DIR}
+    INSTALL_DIR ${OSG_INSTALL_DIR}
+)
 set_target_properties(osg PROPERTIES FOLDER "3rdparty")
 
-if(OMEGA_USE_EXTERNAL_OSG)
-    set(OSG_INCLUDES
-		${OMEGA_EXTERNAL_OSG_SOURCE_PATH}/include
-		${OMEGA_EXTERNAL_OSG_BINARY_PATH}/include)
-else()
-	set(OSG_INCLUDES ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src/osg-install/include)
-endif()
-# NOTE: OSG_INCLUDES is set as a variable in the parent scope, so it can be accessed by other modules like cyclops.
-#set(OSG_INCLUDES ${OSG_INCLUDES} PARENT_SCOPE)
+set(OSG_INCLUDES ${OSG_INSTALL_DIR}/include)
 
-# reduced component set.
-#set(OSG_COMPONENTS osg osgAnimation osgDB osgFX osgManipulator osgShadow osgUtil OpenThreads)
-set(OSG_COMPONENTS osg osgAnimation osgDB osgManipulator osgFX osgShadow osgTerrain osgText osgUtil osgVolume OpenThreads osgGA osgViewer osgSim osgWidget)
+set(OSG_COMPONENTS 
+    osg 
+    osgAnimation 
+    osgDB 
+    osgManipulator 
+    osgFX 
+    osgShadow 
+    osgTerrain 
+    osgText 
+    osgUtil 
+    osgVolume 
+    OpenThreads 
+    osgGA 
+    osgViewer 
+    osgSim 
+    osgWidget)
 
-if(OMEGA_OS_WIN)
-	if(OMEGA_USE_EXTERNAL_OSG)
-		foreach( C ${OSG_COMPONENTS} )
-			set(${C}_LIBRARY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}.lib CACHE INTERNAL "")
-			set(${C}_LIBRARY_DEBUG ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/lib/${C}d.lib CACHE INTERNAL "")
-			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
-		endforeach()
-
-		# Copy the dlls into the target directories
-		file(COPY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG} PATTERN "*.dll")
-		file(COPY ${OMEGA_EXTERNAL_OSG_BINARY_PATH}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
-	else()
-		foreach( C ${OSG_COMPONENTS} )
-			set(${C}_LIBRARY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}/${C}.lib CACHE INTERNAL "")
-			set(${C}_LIBRARY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}/${C}d.lib CACHE INTERNAL "")
-			set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
-		endforeach()
-
-		# Copy the dlls into the target directories
-		#file(COPY ${OSG_BUILD_DIR}/bin/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG} PATTERN "*.dll")
-		#file(COPY ${EXTLIB_DIR}/bin/release/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE} PATTERN "*.dll")
-	endif()
-
-
-elseif(OMEGA_OS_LINUX)
-	# Linux
-	foreach( C ${OSG_COMPONENTS} )
-		set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}.so)
-		set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/osg/lib${C}d.so)
-		set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
-  endforeach()
-
-	# On linux the .so files do not need to be copied to the bin folder
-	#if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	#	file(COPY ${EXTLIB_DIR}/lib/debug/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	#	file(COPY ${EXTLIB_DIR}/lib/debug/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	#else(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	#	file(COPY ${EXTLIB_DIR}/lib/release/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	#	file(COPY ${EXTLIB_DIR}/lib/release/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	#endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-else()
-	# OSX
+# Set variables pointing to all the osg component libraries    
+if(WIN32)
+    foreach( C ${OSG_COMPONENTS} )
+        set(${C}_LIBRARY ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE}/${C}.lib CACHE INTERNAL "")
+        set(${C}_LIBRARY_DEBUG ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG}/${C}d.lib CACHE INTERNAL "")
+        set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG} CACHE INTERNAL "")
+    endforeach()
+elseif(APPLE)
 	foreach( C ${OSG_COMPONENTS} )
 		set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}.dylib)
 		set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}d.dylib)
 		set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
 	endforeach()
-	# file(COPY ${EXTLIB_DIR}/lib/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-	# file(COPY ${EXTLIB_DIR}/lib/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+else()
+    foreach( C ${OSG_COMPONENTS} )
+        set(${C}_LIBRARY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}.so)
+        set(${C}_LIBRARY_DEBUG ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/lib${C}d.so)
+        set(OSG_LIBS ${OSG_LIBS} optimized ${${C}_LIBRARY} debug ${${C}_LIBRARY_DEBUG})
+    endforeach()
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/UseOsgWorks.cmake)
-# Add osgWorks to openscenegraph includes and libraries (this simplified inclusion in other projects.
-# we consider osg and osgWorks as a single package.
+    
+# Add osgWorks to openscenegraph includes and libraries (this simplified inclusion 
+# in other projects. We consider osg and osgWorks as a single package.
 set(OSG_INCLUDES ${OSG_INCLUDES} ${OSGWORKS_INCLUDES} CACHE INTERNAL "")
 set(OSG_LIBS ${OSG_LIBS} ${OSGWORKS_LIBS} CACHE INTERNAL "")
-set(OSG_INSTALL_DIR ${OSG_INSTALL_DIR} CACHE INTERNAL "")
 
-if(${OMEGA_INSTALL_DEVLIBS})
-	# on windows, copy a subset of the OpenSceneGraph package, to trim some of the fat.
-	# NOTE: Need to re-do this to allow external applications to build on install environments
-	#set(EXTLIB_DIR ${CMAKE_BINARY_DIR}/modules/omegaOsg/osg-prefix/src)
-	#if(WIN32)
-		#install(DIRECTORY ${EXTLIB_DIR}/osg/include DESTINATION omegalib/${EXTLIB_NAME})
-		#install(DIRECTORY ${EXTLIB_DIR}/lib/release DESTINATION omegalib/${EXTLIB_NAME}/lib)
-	#else()
-		#install(DIRECTORY ${EXTLIB_DIR} DESTINATION omegalib)
-	#endif()
-endif()
