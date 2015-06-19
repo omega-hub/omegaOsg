@@ -231,6 +231,10 @@ void OsgRenderPass::render(Renderer* client, const DrawContext& context)
             myDebugOverlay->update(mySceneView);
             myDebugOverlay->draw(context);
         }
+        if(myModule->setRenderPassListener())
+        {
+            myModule->setRenderPassListener()->onFrameFinished(client, context, mySceneView);
+        }
     }
     //sInitLock.unlock();
 }

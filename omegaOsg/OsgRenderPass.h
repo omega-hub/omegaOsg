@@ -40,9 +40,6 @@
 #include "oosgbase.h"
 #include<osg/Referenced>
 
-
-class SceneView;
-
 namespace osg
 {
     class Node;
@@ -53,6 +50,7 @@ namespace omegaOsg
     using namespace omega;
     class OsgModule;
     class OsgDebugOverlay;
+    class SceneView;
 
     ////////////////////////////////////////////////////////////////////////////
     //! Stores user data that will be passed along with the camera to osg nodes

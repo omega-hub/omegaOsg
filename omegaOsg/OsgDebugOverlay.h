@@ -44,11 +44,11 @@ namespace osg
     class Node;
 }
 
-class SceneView;
 struct RenderBinData;
 
 namespace omegaOsg
 {
+    class SceneView;
     using namespace omega;
 
     ////////////////////////////////////////////////////////////////////////////
