@@ -125,6 +125,10 @@ void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool g
     myDrawInfo->depthPartitionMode = dpm;
     cam->setUserData(myDrawInfo);
 
+    // Set the camera culling mode
+    if(context.camera->isCullingEnabled()) cam->setCullingMode(osg::CullSettings::VIEW_FRUSTUM_CULLING);
+    else cam->setCullingMode(osg::CullSettings::NO_CULLING);
+
     cam->setViewport( context.viewport.x(), context.viewport.y(), context.viewport.width(), context.viewport.height() );
     cam->setProjectionMatrix(buildOsgMatrix(context.projection.matrix()));
     cam->setViewMatrix(buildOsgMatrix(context.modelview.matrix()));
