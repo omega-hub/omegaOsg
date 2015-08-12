@@ -61,12 +61,6 @@ else()
         -DCMAKE_MACOSX_RPATH=${CMAKE_MACOSX_RPATH}
         -DCMAKE_INSTALL_RPATH=${CMAKE_INSTALL_RPATH}
         -DCMAKE_BUILD_WITH_INSTALL_RPATH=${CMAKE_BUILD_WITH_INSTALL_RPATH}
-        # We force osg to compile using C++98 (libstdc++) on all platforms.
-        # On apple, osg tried to use C++11 (libc++) by default, which causes
-        # linker error with other platforms.
-        # In the future, we should move everything to c++11, but for the time being
-        # this is an easier solution.
-        -DOSG_CXX_LANGUAGE_STANDARD:STRING=c++98
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         -DCMAKE_LIBRARY_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
@@ -74,6 +68,17 @@ else()
         -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
         -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY:PATH=${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}
     )
+    if(NOT CMAKE_GENERATOR STREQUAL "Xcode")
+    	set(OSG_ARGS
+        ${OSG_ARGS}
+	        # We force osg to compile using C++98 (libstdc++) on all platforms.
+	        # On apple, osg tried to use C++11 (libc++) by default, which causes
+    	    # linker error with other platforms.
+        	# In the future, we should move everything to c++11, but for the time being
+        	# this is an easier solution.
+        	-DOSG_CXX_LANGUAGE_STANDARD:STRING=c++98
+    	)
+    endif(NOT CMAKE_GENERATOR STREQUAL "Xcode")
 endif()
 
 # Create the OSG external project
