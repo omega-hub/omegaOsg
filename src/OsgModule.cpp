@@ -132,7 +132,8 @@ OsgModule::OsgModule():
     EngineModule("OsgModule"),
         myDepthPartitionMode(OsgDrawInformation::DepthPartitionOff),
         myDepthPartitionZ(1000),
-        myDisplayDebugOverlay(false)
+        myDisplayDebugOverlay(false),
+        myRenderPassListener(NULL)
 {
     mysInstance = this;
 

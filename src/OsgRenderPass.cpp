@@ -72,6 +72,8 @@ OsgRenderPass::OsgRenderPass(Renderer* client, const String& name): RenderPass(c
 ////////////////////////////////////////////////////////////////////////////////
 OsgRenderPass::~OsgRenderPass()
 {
+    //osg::GraphicsContext::incrementContextIDUsageCount(mySceneView->getState()->getContextID());
+
     mySceneView = NULL;
     //myDebugOverlay->unref();
     myDebugOverlay = NULL;
@@ -87,11 +89,12 @@ void OsgRenderPass::initialize()
     myModule = (OsgModule*)getUserData();
 
     uint ctxid = getClient()->getGpuContext()->getId();
+    //osg::GraphicsContext::incrementContextIDUsageCount(ctxid);
 
     // Initialize standard scene view
     mySceneView = new SceneView(myModule->getDatabasePager());
     mySceneView->initialize();
-    mySceneView->getState()->setContextID(ctxid);
+    mySceneView->getState()->setContextID(osg::GraphicsContext::createNewContextID());
 
     // Initialize far scene view (for depth partitioning) 
     myFarSceneView = new SceneView(myModule->getDatabasePager());
@@ -116,7 +119,7 @@ void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool g
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
-    view->getState()->setContextID(context.tile->id);
+    //view->getState()->setContextID(context.tile->id);
 
     osg::Camera* cam = view->getCamera();
 
@@ -124,6 +127,10 @@ void OsgRenderPass::drawView(SceneView* view, const DrawContext& context, bool g
     myDrawInfo->context = &context;
     myDrawInfo->depthPartitionMode = dpm;
     cam->setUserData(myDrawInfo);
+
+    // Set the camera culling mode
+    if(context.camera->isCullingEnabled()) cam->setCullingMode(osg::CullSettings::VIEW_FRUSTUM_CULLING);
+    else cam->setCullingMode(osg::CullSettings::NO_CULLING);
 
     cam->setViewport( context.viewport.x(), context.viewport.y(), context.viewport.width(), context.viewport.height() );
     cam->setProjectionMatrix(buildOsgMatrix(context.projection.matrix()));
@@ -230,6 +237,10 @@ void OsgRenderPass::render(Renderer* client, const DrawContext& context)
         {
             myDebugOverlay->update(mySceneView);
             myDebugOverlay->draw(context);
+        }
+        if(myModule->setRenderPassListener())
+        {
+            myModule->setRenderPassListener()->onFrameFinished(client, context, mySceneView);
         }
     }
     //sInitLock.unlock();

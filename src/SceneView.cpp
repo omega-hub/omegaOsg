@@ -52,6 +52,7 @@
 #include <osg/ColorMatrix>
 #include <osg/LightModel>
 #include <osg/CollectOccludersVisitor>
+#include <osg/ContextData>
 
 #include <osg/GLU>
 
@@ -227,7 +228,7 @@ void SceneView::initialize()
     // Disable default computing of near/far plane: Equalizer takes care of this.
 
     _cullVisitor->setComputeNearFarMode(osg::CullSettings::DO_NOT_COMPUTE_NEAR_FAR);
-    _cullVisitor->setCullingMode(osg::CullSettings::VIEW_FRUSTUM_CULLING);
+    _camera->setCullingMode(osg::CullSettings::VIEW_FRUSTUM_CULLING);
 
     _cullVisitor->setStateGraph(_stateGraph.get());
     _cullVisitor->setRenderStage(_renderStage.get());
@@ -335,6 +336,7 @@ void SceneView::cull(int eye)
     //state->setDisplaySettings(_displaySettings.get());
 
     _cullVisitor->setTraversalMask(_cullMask);
+    _cullVisitor->setCullingMode(_camera->getCullingMode());
     bool computeNearFar = cullStage(_camera->getProjectionMatrix(),_camera->getViewMatrix(),_cullVisitor.get(),_stateGraph.get(),_renderStage.get(),_camera->getViewport());
     if (computeNearFar)
     {
@@ -512,13 +514,8 @@ void SceneView::draw()
 
     osg::State* state = _renderInfo.getState();
     state->initializeExtensionProcs();
-
-    osg::Texture::TextureObjectManager* tom = osg::Texture::getTextureObjectManager(state->getContextID()).get();
-    tom->newFrame(state->getFrameStamp());
-
-    osg::GLBufferObjectManager* bom = osg::GLBufferObjectManager::getGLBufferObjectManager(state->getContextID()).get();
-    bom->newFrame(state->getFrameStamp());
-
+    osg::get<ContextData>(state->getContextID())->newFrame(state->getFrameStamp());
+    
     if (!_initCalled) initialize();
 
     // note, to support multi-pipe systems the deletion of OpenGL display list

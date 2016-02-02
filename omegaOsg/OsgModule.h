@@ -62,6 +62,16 @@ namespace omegaOsg
     using namespace omega;
 
     class OsgSceneObject;
+    class SceneView;
+
+    ///////////////////////////////////////////////////////////////////////////
+    //! A listener that will be notified of osg render pass operations and has
+    //! access to the osg view internals
+    class IOsgRenderPassListener
+    {
+    public:
+        virtual void onFrameFinished(Renderer* client, const DrawContext& context, SceneView* scene) = 0;
+    };
 
     ///////////////////////////////////////////////////////////////////////////
     class OOSG_API OsgModule: public EngineModule
@@ -112,6 +122,16 @@ namespace omegaOsg
 		bool isCompileGLObjectsEnabled(){return compileGLObjects; }
 		void setCompileGLObjects(bool value){compileGLObjects = value;}
 
+        //! Set a listener that will be notified of osg render pass operations
+        void setRenderPassListener(IOsgRenderPassListener* listener)
+        {
+            myRenderPassListener = listener; 
+        }
+        IOsgRenderPassListener* setRenderPassListener()
+        {
+            return myRenderPassListener;
+        }
+
     private:
         static OsgModule* mysInstance;
 
@@ -130,6 +150,8 @@ namespace omegaOsg
         Ref<osg::NodeVisitor> myUpdateVisitor;
         Ref<osgDB::DatabasePager> myDatabasePager;
         List< Ref<OsgRenderPass> > myRenderPasses;
+
+        IOsgRenderPassListener* myRenderPassListener;
     };
 };
 #endif

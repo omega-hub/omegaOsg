@@ -30,6 +30,7 @@
 #include <osg/MatrixTransform>
 #include <osg/Light>
 #include <osg/LightSource>
+#include <osg/LightModel>
 #include <osg/Material>
 
 #define OMEGA_NO_GL_HEADERS
@@ -42,7 +43,7 @@ using namespace omegaToolkit;
 using namespace omegaOsg;
 
 String sModelName;
-float sModelSize = 1.0f;
+double sModelSize = 1.0f;
 
 ///////////////////////////////////////////////////////////////////////////////
 class OsgViewer: public EngineModule
@@ -63,6 +64,7 @@ private:
     SceneNode* mySceneNode;
     Actor* myInteractor;
     osg::Light* myLight;
+	osg::LightModel* myLightModel;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,15 +147,18 @@ void OsgViewer::initialize()
 
     // Set the osg node as the root node
     myOsg->setRootNode(root);
-
     // Setup shading
     myLight = new osg::Light;
-    myLight->setLightNum(0);
-    myLight->setPosition(osg::Vec4(0.0, 2, 1, 1.0));
-    myLight->setAmbient(osg::Vec4(0.1f,0.1f,0.2f,1.0f));
-    myLight->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    myLight->setLightNum(5);
+    myLight->setPosition(osg::Vec4(0.0, 2, 1, .1f));
+    myLight->setAmbient(osg::Vec4(0.1f,0.1f,0.2f,.1f));
+    myLight->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,.1f));
     myLight->setSpotExponent(0);
     myLight->setSpecular(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
+	myLightModel = new osg::LightModel;
+	myLightModel->setTwoSided(true);
+	root->getOrCreateStateSet()->setAttributeAndModes(myLightModel, osg::StateAttribute::ON);
+	root->getOrCreateStateSet()->setMode(GL_LIGHTING, osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
 
     osg::LightSource* ls = new osg::LightSource();
     ls->setLight(myLight);
@@ -174,6 +179,6 @@ int main(int argc, char** argv)
 {
     Application<OsgViewer> app("osgviewer");
     oargs().newNamedString(':', "model", "model", "The osg model to load", sModelName);
-    oargs().newNamedString('s', "size", "size", "The screen size of the model in meters (default: 1)", sModelName);
+	oargs().newNamedDouble('s', "size", "size", "The screen size of the model in meters (default: 1)", sModelSize);
     return omain(app, argc, argv);
 }
