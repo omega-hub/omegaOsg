@@ -31,7 +31,7 @@ endif()
 # right directory.
 # You can find the OSG version in the main osg cmake file around line 54..
 # in the future we can probably pull the value directly from there.
-set(OSG_VERSION "3.3.8" CACHE INTERNAL "")
+set(OSG_VERSION "3.5.1" CACHE INTERNAL "")
 
 # Set the common project arguments
 set(OSG_ARGS
