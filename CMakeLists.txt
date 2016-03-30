@@ -1,4 +1,4 @@
-module_version(2.2)
+module_version(2.3)
 
 # Open Scene Graph configuration, libraries and applications
 include(external/UseOpenSceneGraph.cmake)
