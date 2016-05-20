@@ -34,6 +34,7 @@
  ******************************************************************************/
 #include "omega/Renderer.h"
 #include "omega/DrawInterface.h"
+#include "omega/DrawContext.h"
 #include "omegaOsg/SceneView.h"
 #include "omegaOsg/OsgDebugOverlay.h"
 
