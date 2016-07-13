@@ -36,7 +36,7 @@
 #define __OSG_RENDER_PASS_H__
 
 #include "omega/RenderPass.h"
-
+#include "omega/StatsManager.h"
 #include "oosgbase.h"
 #include<osg/Referenced>
 

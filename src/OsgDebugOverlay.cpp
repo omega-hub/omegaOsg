@@ -36,6 +36,7 @@
 #include "omega/DrawInterface.h"
 #include "omegaOsg/SceneView.h"
 #include "omegaOsg/OsgDebugOverlay.h"
+#include "omega/DrawContext.h"
 
 #include <osg/Drawable>
 #include <osg/Geometry>
@@ -185,7 +186,7 @@ void drawRenderBin(RenderBinData* data, DrawInterface* di, Vector2f& pos)
     {
         di->drawText(
             ostr("%1% vtx: %2%", %rlf->id %rlf->vertices),
-		    ft, pos, Font::HALeft | Font::VAMiddle, Color::White);
+            ft, pos, Font::HALeft | Font::VAMiddle, Color::White);
         pos += Vector2f(0, charsz);
     }
     foreach(RenderBinData* rb, data->bins)
@@ -199,24 +200,24 @@ void drawRenderBin(RenderBinData* data, DrawInterface* di, Vector2f& pos)
 void OsgDebugOverlay::draw(const DrawContext& context)
 {
     if(context.task == DrawContext::OverlayDrawTask &&
-		context.eye == DrawContext::EyeCyclop)
+        context.eye == DrawContext::EyeCyclop)
     {
         DrawInterface* di = context.renderer->getRenderer();
-		di->beginDraw2D(context);
+        di->beginDraw2D(context);
 
         Vector2f pos = Vector2f::Zero();
         Vector2f size= Vector2f(300, 400);
 
-	    const DisplayTileConfig* tile = context.tile;
-	    float cx = tile->offset.x();
-	    float cy = tile->offset.y();
-	    pos += Vector2f(cx, cy);
+        const DisplayTileConfig* tile = context.tile;
+        float cx = tile->offset.x();
+        float cy = tile->offset.y();
+        pos += Vector2f(cx, cy);
 
-	    di->drawRect(pos, size, Color(0,0,0,0.8f));
+        di->drawRect(pos, size, Color(0,0,0,0.8f));
 
-	    pos[1] += 10;
+        pos[1] += 10;
 
         drawRenderBin(myData, di, pos);
-		di->endDraw();
+        di->endDraw();
     }
 }
