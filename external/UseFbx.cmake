@@ -23,7 +23,7 @@ if(NOT EXISTS ${EXTLIB_DIR})
 	else()
         # Visual Studio 2008 & Linux FBX SDKs are downloaded as a single package
 		if(OMEGA_TOOL_VS10 OR UNIX)
-			file(DOWNLOAD http://omegalib.googlecode.com/files/${EXTLIB_NAME}.tar.gz ${EXTLIB_TGZ} SHOW_PROGRESS)
+			file(DOWNLOAD https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/omegalib/${EXTLIB_NAME}.tar.gz ${EXTLIB_TGZ} SHOW_PROGRESS)
         # Visual studio 2012
 		elseif(OMEGA_TOOL_VS11)
 			file(DOWNLOAD https://github.com/sufulow/fbxsdk_win_vs2012/raw/master/fbxsdk_win-2014-vs11.tar.gz ${EXTLIB_TGZ} SHOW_PROGRESS)
